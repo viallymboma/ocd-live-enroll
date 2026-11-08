@@ -5,7 +5,7 @@ export const en: Dict = {
     title: "OCD Live — Your product, live, powered by influence",
     description: "Have your product presented live by influencers and celebrities. Online or at the OCD Live studio in Lomé.",
   },
-  nav: { how: "How it works", packages: "Packages", start: "Get started", lang: "FR", langLabel: "Passer en français", themeDark: "Switch to dark mode", themeLight: "Switch to light mode" },
+  nav: { backToTop: "Back to top", how: "How it works", packages: "Packages", start: "Get started", lang: "FR", langLabel: "Passer en français", themeDark: "Switch to dark mode", themeLight: "Switch to light mode" },
   prefs: { title: "Language & display", open: "Language and theme", language: "Language", appearance: "Appearance", light: "Light", dark: "Dark", system: "System", systemHint: "“System” follows your phone or computer setting." },
   liveType: {
     online: "Online live",

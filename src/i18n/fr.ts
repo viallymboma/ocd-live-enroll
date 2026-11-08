@@ -4,7 +4,7 @@ export const fr = {
     title: "OCD Live — Votre produit en direct, porté par l'influence",
     description: "Faites présenter votre produit en live par des influenceurs et célébrités. En ligne ou au studio OCD Live de Lomé.",
   },
-  nav: { how: "Comment ça marche", packages: "Formules", start: "Commencer", lang: "EN", langLabel: "Switch to English", themeDark: "Passer en mode sombre", themeLight: "Passer en mode clair" },
+  nav: { backToTop: "Revenir en haut", how: "Comment ça marche", packages: "Formules", start: "Commencer", lang: "EN", langLabel: "Switch to English", themeDark: "Passer en mode sombre", themeLight: "Passer en mode clair" },
   prefs: { title: "Langue & affichage", open: "Langue et thème", language: "Langue", appearance: "Apparence", light: "Clair", dark: "Sombre", system: "Système", systemHint: "« Système » suit le réglage de votre téléphone ou ordinateur." },
   liveType: {
     online: "Live en ligne",
