@@ -50,6 +50,7 @@ export const en: Dict = {
     included: "Included",
     both: "Online & Lomé",
     empty: "Packages are coming very soon.",
+    scroll: "Keep scrolling",
   },
   final: {
     title1: "Your next audience",

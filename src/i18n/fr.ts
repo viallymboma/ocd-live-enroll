@@ -49,6 +49,7 @@ export const fr = {
     included: "Inclus",
     both: "En ligne & Lomé",
     empty: "Les formules arrivent très bientôt.",
+    scroll: "Faites défiler",
   },
   final: {
     title1: "Votre prochaine audience",

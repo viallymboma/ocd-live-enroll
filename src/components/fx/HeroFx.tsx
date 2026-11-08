@@ -25,7 +25,7 @@ export function HeroFx({ children, className = "" }: { children: React.ReactNode
       const title = root.querySelector<HTMLElement>("[data-split]");
       if (title) {
         SplitText.create(title, {
-          type: "lines,chars",
+          type: "lines,words,chars", // words keep their letters together: "LIVE" never breaks as "LI / VE"
           mask: "lines",
           autoSplit: true,
           onSplit(self) {

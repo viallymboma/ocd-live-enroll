@@ -48,9 +48,10 @@ Setting a new password signs every other device out and lifts a login lock. No t
 
 Open `/setup`, enter `SETUP_TOKEN`, name, email, password. The screen refuses once an account exists.
 
-## Map
+## Map & globe
 
-`npm run map:build` regenerates `src/components/map/africa-geo.ts` from Natural Earth (world-atlas).
+`npm run map:build` regenerates `src/components/map/africa-geo.ts` (the 2D map) and `node scripts/build-globe.mjs` regenerates `src/components/globe/globe-dots.ts` (the 3D hero globe), both from Natural Earth (world-atlas).
+The globe needs a GPU: without one (or with WebGL off) the 2D map is shown instead. `/?globe=force` forces it, for testing.
 
 ## Languages
 

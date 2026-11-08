@@ -19,7 +19,7 @@ export function HowItWorks() {
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-24">
             <p className="kicker mb-4">{t.how.kicker}</p>
-            <h2 className="display text-[clamp(2.4rem,6vw,4.8rem)] font-light">{t.how.title}</h2>
+            <h2 data-speed="0.85" className="display text-[clamp(2.4rem,6vw,4.8rem)] font-light">{t.how.title}</h2>
           </div>
         </div>
         <ol ref={ref} className="relative lg:col-span-7">
@@ -38,7 +38,7 @@ export function HowItWorks() {
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div>
-                <span aria-hidden className="display pointer-events-none block text-[clamp(4rem,10vw,7.5rem)] font-extralight leading-[0.8] text-transparent [-webkit-text-stroke:1px_rgb(224_164_88/0.35)]">
+                <span aria-hidden data-speed="1.35" className="display pointer-events-none block text-[clamp(4rem,10vw,7.5rem)] font-extralight leading-[0.8] text-transparent [-webkit-text-stroke:1px_rgb(224_164_88/0.35)]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="-mt-6 text-2xl font-bold text-ivory sm:-mt-9 sm:text-3xl">{s.title}</h3>

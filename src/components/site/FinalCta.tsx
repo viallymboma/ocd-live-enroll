@@ -8,11 +8,11 @@ import type { Dict } from "@/i18n";
 export function FinalCta({ t }: { t: Dict }) {
   return (
     <FinalFx className="relative isolate overflow-hidden">
-      <svg aria-hidden viewBox={`0 0 ${MAP_W} ${MAP_H}`} className="absolute -right-24 top-1/2 -z-10 w-[640px] -translate-y-1/2 opacity-25 sm:right-0">
+      <svg aria-hidden data-speed="1.25" viewBox={`0 0 ${MAP_W} ${MAP_H}`} className="absolute -right-24 top-1/2 -z-10 w-[640px] -translate-y-1/2 opacity-25 sm:right-0">
         <path data-draw d={CONTINENT} fill="none" stroke="var(--ember)" strokeWidth="1.2" strokeLinejoin="round" />
       </svg>
       <div className="mx-auto max-w-[1400px] px-4 py-28 sm:px-8 sm:py-44">
-        <h2 data-scrub-title className="display text-[clamp(3rem,11vw,9rem)] font-light">
+        <h2 data-scrub-title className="display display-xl text-[clamp(3rem,11vw,9rem)] font-light">
           {t.final.title1}
           <br />
           <span className="italic text-ember">{t.final.title2}</span>
