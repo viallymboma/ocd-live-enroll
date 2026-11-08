@@ -1,4 +1,5 @@
 import { LiveTicker } from "@/components/fx/LiveTicker";
+import { Parallax } from "@/components/fx/Parallax";
 import { ScrollProgress } from "@/components/fx/ScrollProgress";
 import { FinalCta } from "@/components/site/FinalCta";
 import { Footer } from "@/components/site/Footer";
@@ -25,6 +26,7 @@ export default async function Home() {
   return (
     <>
       <ScrollProgress />
+      <Parallax />
       <Header t={t} />
       <main>
         <Hero t={t} />

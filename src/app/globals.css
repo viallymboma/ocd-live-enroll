@@ -153,6 +153,8 @@
   }
 
   .display { font-family: var(--font-display); font-optical-sizing: auto; letter-spacing: -0.035em; line-height: 0.92; }
+  /* Giant titles: at Fraunces' largest optical size the "e" crossbar becomes a hairline that vanishes ("e" reads "c"). */
+  .display-xl { font-variation-settings: "opsz" 72; }
   .kicker { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: var(--color-dust); }
 
   /* Buttons */
@@ -182,6 +184,13 @@
   .seg-btn:hover { color: var(--color-ivory); }
   .seg-btn[aria-checked="true"], .seg-btn[aria-checked="true"]:hover { color: var(--color-on-ember); }
   .seg-thumb { position: absolute; inset: 0; border-radius: 999px; background: var(--color-ember); box-shadow: 0 6px 16px -6px rgb(201 95 34 / 0.7); }
+
+  /* Packages carousel: a swipeable row by default; GSAP pins it and drives it with the scroll. */
+  .rail-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .rail-viewport::-webkit-scrollbar { display: none; }
+  .rail-viewport.is-pinned { overflow: visible; scroll-snap-type: none; }
+  .rail-card { transition: border-color 0.4s, box-shadow 0.5s; will-change: transform; }
+  .rail-card[data-front] { border-color: var(--color-ember); box-shadow: 0 0 0 1px var(--color-ember), 0 40px 80px -30px rgb(201 95 34 / 0.55); }
 
   /* Form controls */
   .field { display: grid; gap: 0.45rem; }

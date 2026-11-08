@@ -2,7 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 import { HeroFx } from "@/components/fx/HeroFx";
-import { AfricaScene } from "@/components/map/AfricaScene";
+import { HeroGlobe } from "@/components/globe/HeroGlobe";
 import type { Dict } from "@/i18n";
 
 /**
@@ -14,13 +14,13 @@ export function Hero({ t }: { t: Dict }) {
   return (
     <section className="relative isolate overflow-hidden pt-20 sm:pt-28 lg:min-h-[100svh]">
       {/* stage light */}
-      <div aria-hidden className="absolute -top-40 left-1/2 -z-10 h-[620px] w-[1100px] -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(210_105_42/0.16),transparent)]" />
+      <div aria-hidden data-speed="0.6" className="absolute -top-40 left-1/2 -z-10 h-[620px] w-[1100px] -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(210_105_42/0.16),transparent)]" />
       <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-transparent to-ink" />
 
       <HeroFx className="mx-auto grid max-w-[1400px] items-center gap-6 px-4 sm:px-8 lg:grid-cols-12 lg:gap-4">
         {/* the map: after the CTAs on phones (they come first), its own column on desktop */}
         <div data-hero-map className="relative order-2 mx-auto w-full max-w-[480px] pb-6 lg:col-span-6 lg:max-w-none lg:pb-0">
-          <AfricaScene />
+          <HeroGlobe />
         </div>
 
         <div data-hero-copy className="relative z-10 order-1 lg:col-span-6 lg:py-16">
@@ -32,7 +32,7 @@ export function Hero({ t }: { t: Dict }) {
             {t.hero.eyebrow}
           </p>
 
-          <h1 data-split data-reveal className="display text-[clamp(2.9rem,10.5vw,7.4rem)] font-light">
+          <h1 data-split data-reveal className="display display-xl text-[clamp(2.7rem,9.5vw,6.4rem)] font-light">
             {words.map((w, i) => (
               <span key={i} className="block pb-[0.06em]">{w}</span>
             ))}

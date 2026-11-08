@@ -52,7 +52,7 @@ export function LiveTicker() {
     <div ref={ref} aria-hidden className="relative overflow-hidden border-y border-line bg-ink-2/60 py-6 sm:py-9">
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-ink to-transparent sm:w-40" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-ink to-transparent sm:w-40" />
-      <div data-track className="display flex w-max whitespace-nowrap text-[clamp(2.4rem,7vw,5.6rem)] font-light italic leading-none will-change-transform">{row(false)}</div>
+      <div data-track className="display display-xl flex w-max whitespace-nowrap text-[clamp(2.4rem,7vw,5.6rem)] font-light italic leading-none will-change-transform">{row(false)}</div>
       <div data-track className="display mt-2 flex w-max whitespace-nowrap text-[clamp(2.4rem,7vw,5.6rem)] font-semibold uppercase leading-none tracking-tight will-change-transform">{row(true)}</div>
     </div>
   );
