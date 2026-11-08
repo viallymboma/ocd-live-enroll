@@ -6,7 +6,10 @@ import { getDict } from "@/i18n/server";
 import { adminCount } from "@/server/auth";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Setup", robots: { index: false } };
+export async function generateMetadata() {
+  const { t } = await getDict();
+  return { title: t.admin.setup.title, robots: { index: false } };
+}
 
 /** One-time screen: gone as soon as an admin exists. Needs SETUP_TOKEN. */
 export default async function SetupPage() {

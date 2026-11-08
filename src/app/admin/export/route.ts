@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { lomeTime } from "@/lib/time";
+import { getDict } from "@/i18n/server";
 import { currentAdmin } from "@/server/auth";
 import { allRequests, readFilters } from "@/server/queries";
 
@@ -17,11 +18,12 @@ export async function GET(req: NextRequest) {
   if (!(await currentAdmin())) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const f = readFilters(Object.fromEntries(req.nextUrl.searchParams));
   const rows = await allRequests(f);
-  const header = ["Reference", "Status", "Live type", "Package", "Duration (min)", "Price", "Currency", "Date", "Start", "End", "Business", "Sector", "Product", "Description", "Country", "City", "TikTok", "Instagram", "Facebook", "Website", "Special requests", "Contact", "WhatsApp", "Email", "Sent at", "Rejection reason"];
+  const { locale, t } = await getDict();
+  const header = t.admin.csv;
   const lines = rows.map((b) =>
     [
-      b.reference, b.status, b.liveType, b.package.name.fr, b.package.durationMinutes, b.package.price, b.package.currency, b.day, lomeTime(b.start), lomeTime(b.end),
-      b.business.name, b.business.sector, b.business.product, b.business.description, b.business.country, b.business.city,
+      b.reference, t.status[b.status], b.liveType === "online" ? t.liveType.online : t.liveType.onsite, b.package.name[locale], b.package.durationMinutes, b.package.price, b.package.currency, b.day, lomeTime(b.start), lomeTime(b.end),
+      b.business.name, t.sectors[b.business.sector as keyof typeof t.sectors] ?? b.business.sector, b.business.product, b.business.description, b.business.country, b.business.city,
       b.business.tiktok, b.business.instagram, b.business.facebook, b.business.website, b.business.specialRequests,
       b.contact.fullName, b.contact.whatsapp, b.contact.email, b.createdAt.toISOString(), b.rejectionReason,
     ].map(cell).join(";"),

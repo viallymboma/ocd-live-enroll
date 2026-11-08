@@ -162,9 +162,12 @@ export const fr = {
     events: "Événements & loisirs",
     other: "Autre",
   },
+  notFound: { title: "Page introuvable", lead: "Cette page n'existe pas ou a été déplacée.", home: "Retour à l'accueil" },
   status: { pending: "En attente", validated: "Validée", rejected: "Refusée", cancelled: "Annulée" },
   admin: {
     brand: "Espace équipe",
+    metaTitle: "Espace équipe",
+    csv: ["Référence", "Statut", "Type de live", "Formule", "Durée (min)", "Prix", "Devise", "Date", "Début", "Fin", "Entreprise", "Secteur", "Produit", "Description", "Pays", "Ville", "TikTok", "Instagram", "Facebook", "Site web", "Demandes particulières", "Contact", "WhatsApp", "E-mail", "Envoyée le", "Motif du refus"],
     nav: { overview: "Vue d'ensemble", requests: "Demandes", packages: "Formules", schedule: "Planning", logout: "Déconnexion", site: "Voir le site" },
     login: { title: "Connexion", email: "E-mail", password: "Mot de passe", submit: "Se connecter", invalid: "E-mail ou mot de passe incorrect.", locked: "Trop d'essais. Réessayez dans 15 minutes." },
     setup: {
@@ -211,6 +214,7 @@ export const fr = {
       reject: "Refuser",
       cancel: "Annuler la réservation",
       reason: "Motif (envoyé au client)",
+      reasonShown: "Motif du refus",
       cancelReason: "Motif (interne)",
       confirm: "Confirmer",
       close: "Fermer",
@@ -248,6 +252,7 @@ export const fr = {
       order: "Ordre",
       active: "Proposée aux clients",
       placeholder: "Contenu à confirmer",
+      inactive: "Désactivée",
       fr: "Français",
       en: "Anglais",
       invalid: "Vérifiez les champs : nom, durée (15 min à 12 h) et au moins un type de live.",

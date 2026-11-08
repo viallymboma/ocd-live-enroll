@@ -56,7 +56,12 @@ export function formatDay(day: string, locale: "fr" | "en", opts: Intl.DateTimeF
   return new Intl.DateTimeFormat(locale === "fr" ? "fr-FR" : "en-GB", { ...opts, timeZone: "UTC" }).format(lomeInstant(day, "12:00"));
 }
 
+/** XOF and XAF are both written "FCFA" locally. */
+export function currencyLabel(currency: string) {
+  return currency === "XOF" || currency === "XAF" ? "FCFA" : currency;
+}
+
 export function formatMoney(amount: number, currency: string, locale: "fr" | "en") {
-  const n = new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-GB", { maximumFractionDigits: 0 }).format(amount);
-  return `${n} ${currency}`;
+  const n = new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-GB", { maximumFractionDigits: 0, useGrouping: "always" } as Intl.NumberFormatOptions).format(amount);
+  return `${n} ${currencyLabel(currency)}`;
 }

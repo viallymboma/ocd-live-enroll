@@ -42,13 +42,20 @@ async function send(to: string, subject: string, text: string, html: string) {
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
+/** Public address of the site, for the logo in emails. */
+function siteUrl() {
+  const raw = process.env.PUBLIC_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || "";
+  if (!raw) return "";
+  return (/^https?:\/\//.test(raw) ? raw : `https://${raw}`).replace(/\/+$/, "");
+}
+
 function layout(title: string, lines: string[], rows: [string, string][]) {
   const table = rows
     .map(([k, v]) => `<tr><td style="padding:6px 16px 6px 0;color:#8a7f72;font-size:13px">${esc(k)}</td><td style="padding:6px 0;color:#f3ebdd;font-size:14px">${esc(v)}</td></tr>`)
     .join("");
   return `<!doctype html><html><body style="margin:0;background:#0e0c0b;font-family:Helvetica,Arial,sans-serif">
 <div style="max-width:560px;margin:0 auto;padding:40px 24px">
-<div style="font-size:28px;font-weight:800;letter-spacing:-1px;color:#d2692a">OCD <span style="color:#f3ebdd">Live</span></div>
+${siteUrl() ? `<img src="${siteUrl()}/brand/ocd-live-logo-email.png" width="120" alt="OCD Live" style="display:block;border:0">` : `<div style="font-size:28px;font-weight:800;letter-spacing:-1px;color:#d2692a">OCD <span style="color:#f3ebdd">Live</span></div>`}
 <h1 style="color:#f3ebdd;font-size:22px;line-height:1.3;margin:28px 0 16px">${esc(title)}</h1>
 ${lines.map((l) => `<p style="color:#cfc4b4;font-size:15px;line-height:1.6;margin:0 0 12px">${esc(l)}</p>`).join("")}
 <table style="margin-top:20px;border-top:1px solid #2a2420;padding-top:12px">${table}</table>
@@ -90,6 +97,11 @@ const T = {
       title: "L'horaire de votre live a changé.",
       lines: ["Voici la nouvelle date et heure retenues par notre équipe."],
     },
+    admin: {
+      title: (b: string) => `Nouvelle demande : ${b}`,
+      toValidate: "À valider : ",
+      rows: ["Référence", "Entreprise", "Type", "Formule", "Date", "Contact"],
+    },
   },
   en: {
     type: { online: "Online live", onsite: "On-site live — Lomé" },
@@ -124,6 +136,11 @@ const T = {
       title: "The time of your live has changed.",
       lines: ["Here are the new date and time chosen by our team."],
     },
+    admin: {
+      title: (b: string) => `New request: ${b}`,
+      toValidate: "To validate: ",
+      rows: ["Reference", "Business", "Type", "Package", "Date", "Contact"],
+    },
   },
 };
 
@@ -150,18 +167,21 @@ export async function mailClient(kind: MailKind, b: BookingDoc) {
   await send(b.contact.email, k.subject(b.reference), text, layout(k.title, lines, rows));
 }
 
-/** Alert to the CEO about a new request (ADMIN_NOTIFY_EMAIL, comma-separated). */
+/** Alert to the CEO about a new request (ADMIN_NOTIFY_EMAIL, comma-separated; ADMIN_LOCALE fr|en, default fr). */
 export async function mailAdminNewRequest(b: BookingDoc, adminUrl: string) {
   const to = env().ADMIN_NOTIFY_EMAIL;
   if (!to) return;
-  const rows: [string, string][] = [
-    ["Référence", b.reference],
-    ["Entreprise", b.business.name],
-    ["Type", T.fr.type[b.liveType]],
-    ["Formule", b.package.name.fr],
-    ["Date", `${formatDay(b.day, "fr")} · ${lomeTime(b.start)}`],
-    ["Contact", `${b.contact.fullName} · ${b.contact.whatsapp}`],
+  const l = process.env.ADMIN_LOCALE === "en" ? "en" : "fr";
+  const t = T[l];
+  const values = [
+    b.reference,
+    b.business.name,
+    t.type[b.liveType],
+    b.package.name[l],
+    `${formatDay(b.day, l)} · ${lomeTime(b.start)}`,
+    `${b.contact.fullName} · ${b.contact.whatsapp}`,
   ];
-  const title = `Nouvelle demande : ${b.business.name}`;
-  await send(to, `🟠 ${title} (${b.reference})`, `${title}\n${adminUrl}\n\n${rows.map(([a, v]) => `${a}: ${v}`).join("\n")}`, layout(title, [`À valider : ${adminUrl}`], rows));
+  const rows = t.admin.rows.map((r, i) => [r, values[i]] as [string, string]);
+  const title = t.admin.title(b.business.name);
+  await send(to, `${title} (${b.reference})`, `${title}\n${adminUrl}\n\n${rows.map(([a, v]) => `${a}: ${v}`).join("\n")}`, layout(title, [t.admin.toValidate + adminUrl], rows));
 }

@@ -163,9 +163,12 @@ export const en: Dict = {
     events: "Events & leisure",
     other: "Other",
   },
+  notFound: { title: "Page not found", lead: "This page doesn't exist or has moved.", home: "Back to home" },
   status: { pending: "Pending", validated: "Validated", rejected: "Rejected", cancelled: "Cancelled" },
   admin: {
     brand: "Team area",
+    metaTitle: "Team area",
+    csv: ["Reference", "Status", "Live type", "Package", "Duration (min)", "Price", "Currency", "Date", "Start", "End", "Business", "Sector", "Product", "Description", "Country", "City", "TikTok", "Instagram", "Facebook", "Website", "Special requests", "Contact", "WhatsApp", "Email", "Sent at", "Rejection reason"],
     nav: { overview: "Overview", requests: "Requests", packages: "Packages", schedule: "Schedule", logout: "Sign out", site: "View site" },
     login: { title: "Sign in", email: "Email", password: "Password", submit: "Sign in", invalid: "Wrong email or password.", locked: "Too many attempts. Try again in 15 minutes." },
     setup: {
@@ -212,6 +215,7 @@ export const en: Dict = {
       reject: "Reject",
       cancel: "Cancel booking",
       reason: "Reason (sent to the client)",
+      reasonShown: "Rejection reason",
       cancelReason: "Reason (internal)",
       confirm: "Confirm",
       close: "Close",
@@ -249,6 +253,7 @@ export const en: Dict = {
       order: "Order",
       active: "Offered to clients",
       placeholder: "Content to be confirmed",
+      inactive: "Disabled",
       fr: "French",
       en: "English",
       invalid: "Check the fields: name, duration (15 min to 12 h) and at least one live type.",

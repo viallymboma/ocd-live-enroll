@@ -62,12 +62,18 @@ export function Packages({ t, locale, packages, currency }: { t: Dict; locale: L
                       {/* the ruler */}
                       <div className="md:col-span-5">
                         <div className="relative h-11 overflow-hidden rounded-full border border-line bg-ink">
+                          {/* drawn to true scale; short packages carry their label outside the bar */}
                           <div
                             className="absolute inset-y-0 left-0 flex items-center justify-end rounded-full bg-gradient-to-r from-ember-deep via-ember to-ember-2 pr-4 transition-[filter] duration-500 group-hover:brightness-110"
-                            style={{ width: `max(${pct}%, 6.5rem)` }}
+                            style={{ width: `${pct}%` }}
                           >
-                            <span className="text-sm font-extrabold text-ink">{formatDuration(p.durationMinutes, locale)}</span>
+                            {pct >= 30 && <span className="text-sm font-extrabold text-ink">{formatDuration(p.durationMinutes, locale)}</span>}
                           </div>
+                          {pct < 30 && (
+                            <span className="absolute inset-y-0 flex items-center pl-3 text-sm font-extrabold text-ivory" style={{ left: `${pct}%` }}>
+                              {formatDuration(p.durationMinutes, locale)}
+                            </span>
+                          )}
                         </div>
                         <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-sand">
                           {p.deliverables[locale].map((d) => (

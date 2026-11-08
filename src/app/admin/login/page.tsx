@@ -6,7 +6,10 @@ import { getDict } from "@/i18n/server";
 import { adminCount, currentAdmin } from "@/server/auth";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Admin", robots: { index: false } };
+export async function generateMetadata() {
+  const { t } = await getDict();
+  return { title: t.admin.login.title, robots: { index: false } };
+}
 
 export default async function LoginPage() {
   if (await currentAdmin()) redirect("/admin");

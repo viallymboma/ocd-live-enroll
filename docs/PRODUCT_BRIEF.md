@@ -152,3 +152,25 @@ Steps 1–5 = first demo to the CEO.
 | Online and Lomé schedules | Separate resources; a Lomé booking never blocks an online slot |
 | Currency | Setting in Planning, default XAF, flagged "to confirm" until the CEO ticks it |
 | Placeholder packages | 6 × "Formule N", price 0 = "Tarif à confirmer", badge "Contenu à confirmer" |
+
+---
+
+## 9. Proposed offer (OCD Live's suggestion, 2026-11-08 — editable in the dashboard)
+
+The client asked us to propose. Currency **XOF**, shown "FCFA" (Togo = West African CFA franc).
+
+| # | FR / EN | Duration | Price | Live types |
+|---|---|---|---|---|
+| 1 | Flash / Flash | 30 min | 7 500 FCFA | Online |
+| 2 | Découverte / Discovery | 1 h | 10 000 FCFA | Online & Lomé |
+| 3 | Essentiel / Essential | 1 h 30 | 15 000 FCFA | Online & Lomé (the client's own reference) |
+| 4 | Boost / Boost | 2 h | 25 000 FCFA | Online & Lomé |
+| 5 | Prestige / Prestige | 4 h (celebrity host) | 45 000 FCFA | Online & Lomé |
+| 6 | Journée OCD / OCD Takeover | 8 h at the studio | 80 000 FCFA | Lomé |
+
+Contents of each package: `src/server/settings.ts` (`SUGGESTED_PACKAGES`), FR + EN.
+
+**Hours:** online every day 10:00–22:00 · Lomé studio Mon–Sat 09:00–19:00 · 30 min break between lives ·
+1 business per slot · bookable 60 days ahead · 48 h minimum notice.
+
+**Logo:** vector traced from the studio sign photo → `public/brand/` (SVG for light and dark, PNG, email PNG).

@@ -4,7 +4,7 @@ import { useActionState } from "react";
 
 import { packageAction } from "@/app/admin/actions";
 import { useI18n } from "@/i18n/client";
-import { formatDuration } from "@/lib/time";
+import { currencyLabel, formatDuration } from "@/lib/time";
 import type { PackageDTO } from "@/lib/types";
 
 export function PackageEditor({ pkg, nextOrder, currency }: { pkg: PackageDTO | null; nextOrder: number; currency: string }) {
@@ -18,9 +18,9 @@ export function PackageEditor({ pkg, nextOrder, currency }: { pkg: PackageDTO | 
         <span className="flex flex-wrap items-center gap-3">
           <span className="display text-2xl">{pkg ? pkg.name[locale] : `+ ${p.add}`}</span>
           {pkg && <span className="rounded-full bg-ember/15 px-2.5 py-0.5 text-xs font-bold text-ember-2">{formatDuration(pkg.durationMinutes, locale)}</span>}
-          {pkg && <span className="text-sm text-sand">{pkg.price > 0 ? `${pkg.price.toLocaleString(locale)} ${currency}` : t.packages.priceTbc}</span>}
+          {pkg && <span className="text-sm text-sand">{pkg.price > 0 ? `${pkg.price.toLocaleString(locale)} ${currencyLabel(currency)}` : t.packages.priceTbc}</span>}
           {pkg?.placeholder && <span className="rounded-full bg-gold/15 px-2.5 py-0.5 text-[11px] font-semibold text-gold">{t.packages.tbcBadge}</span>}
-          {pkg && !pkg.active && <span className="rounded-full bg-dust/15 px-2.5 py-0.5 text-[11px] font-semibold text-dust">off</span>}
+          {pkg && !pkg.active && <span className="rounded-full bg-dust/15 px-2.5 py-0.5 text-[11px] font-semibold text-dust">{p.inactive}</span>}
         </span>
         <span className="text-dust transition group-open:rotate-45">+</span>
       </summary>
@@ -38,7 +38,7 @@ export function PackageEditor({ pkg, nextOrder, currency }: { pkg: PackageDTO | 
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
           <label className="field"><span className="label">{p.duration} *</span><input name="duration" type="number" min={15} max={720} step={15} defaultValue={pkg?.durationMinutes ?? 90} required className="input" /></label>
-          <label className="field"><span className="label">{p.price} ({currency})</span><input name="price" type="number" min={0} step={500} defaultValue={pkg?.price ?? 0} className="input" /></label>
+          <label className="field"><span className="label">{p.price} ({currencyLabel(currency)})</span><input name="price" type="number" min={0} step={500} defaultValue={pkg?.price ?? 0} className="input" /></label>
           <label className="field"><span className="label">{p.order}</span><input name="order" type="number" min={0} defaultValue={pkg?.order ?? nextOrder} className="input" /></label>
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">

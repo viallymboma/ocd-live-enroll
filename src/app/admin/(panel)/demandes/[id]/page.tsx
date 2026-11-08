@@ -35,7 +35,7 @@ export default async function RequestDetail({ params }: { params: Promise<{ id: 
           <StatusActions id={id} status={b.status} />
         </div>
       </div>
-      {b.status === "rejected" && b.rejectionReason && <p className="mt-4 rounded-2xl border border-bad/30 bg-bad/10 px-4 py-3 text-sm">{d.reason} : {b.rejectionReason}</p>}
+      {b.status === "rejected" && b.rejectionReason && <p className="mt-4 rounded-2xl border border-bad/30 bg-bad/10 px-4 py-3 text-sm"><span className="font-semibold">{d.reasonShown} —</span> {b.rejectionReason}</p>}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <div className="grid gap-6">
