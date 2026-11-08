@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+/*
+ * OCD LIVE DESIGN SYSTEM — "African digital luxury", in two themes.
+ * Token names describe a ROLE, not a colour: `ink` = the page, `ivory` = the
+ * main text. Light (default): warm ivory paper, charcoal type. Dark: charcoal
+ * stage, ivory type. Burnt orange (from the OCD logo) is the signal in both.
+ */
+:root {
+  --ink: #faf6ef;          /* page */
+  --ink-2: #ffffff;        /* raised surface */
+  --ink-3: #f3ece1;        /* card / hover */
+  --line: #e8dfd2;         /* hairlines */
+  --line-2: #d8cab7;
+  --ivory: #1a1411;        /* primary text */
+  --sand: #4d4239;         /* body text */
+  --dust: #7d7064;         /* muted text */
+  --ember: #c95f22;        /* OCD orange — slightly deeper on paper for contrast */
+  --ember-2: #d9712f;
+  --ember-deep: #9e4719;
+  --gold: #a8681d;         /* accent text on paper */
+  --live: #e5352a;
+  --ok: #2f8a57;
+  --bad: #c8382b;
+  --on-ember: #fffaf3;     /* text on an orange button */
+  --map-land-1: #efe5d6;
+  --map-land-2: #e3d5c1;
+  --map-border: #cdbba3;
+  --map-dots: #a8681d;
+  --map-coast: #c95f22;
+  --map-depth-1: #cdbba3;
+  --map-depth-2: #d8c9b4;
+  --map-depth-3: #e3d6c3;
+  --grain: 0.035;
+  --shadow: 0 20px 50px -24px rgb(60 35 15 / 0.35);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --ink: #0e0c0b;
+  --ink-2: #161311;
+  --ink-3: #201b18;
+  --line: #2e2722;
+  --line-2: #3d342d;
+  --ivory: #f3ebdd;
+  --sand: #cfc4b4;
+  --dust: #8f8476;
+  --ember: #d2692a;
+  --ember-2: #e8843f;
+  --ember-deep: #9e4719;
+  --gold: #e0a458;
+  --live: #ff4d3d;
+  --ok: #6fbf8e;
+  --bad: #e2675a;
+  --on-ember: #0e0c0b;
+  --map-land-1: #2a221d;
+  --map-land-2: #141110;
+  --map-border: #4a3e35;
+  --map-dots: #e0a458;
+  --map-coast: #e0a458;
+  --map-depth-1: #070605;
+  --map-depth-2: #0b0908;
+  --map-depth-3: #100d0b;
+  --grain: 0.06;
+  --shadow: 0 20px 50px -24px rgb(0 0 0 / 0.8);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-dust: var(--dust);
+  --color-ember: var(--ember);
+  --color-ember-2: var(--ember-2);
+  --color-ember-deep: var(--ember-deep);
+  --color-gold: var(--gold);
+  --color-live: var(--live);
+  --color-ok: var(--ok);
+  --color-warn: var(--gold);
+  --color-bad: var(--bad);
+  --color-on-ember: var(--on-ember);
+
+  --font-display: var(--font-fraunces), "Georgia", serif;
+  --font-sans: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+}
+
+@theme {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s var(--ease-out-expo) infinite;
+  --animate-blink: blink 1.6s steps(2, start) infinite;
+  --animate-rise: rise 0.9s var(--ease-out-expo) both;
+  --animate-marquee: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -8px, 0); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes blink {
+  to { visibility: hidden; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translate3d(0, 24px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-ink);
+    min-height: 100dvh;
+    /* Nothing (a sliding step, a parallax layer) may ever widen the page: phones would zoom out. */
+    overflow-x: clip;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--color-ember); color: var(--color-on-ember); }
+  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; border-radius: 6px; }
+  input, select, textarea { font: inherit; }
+  input[type="search"]::-webkit-search-cancel-button { appearance: none; }
+}
+
+@layer components {
+  /* Fine film grain over the stage — breaks the flat "template" dark. */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    opacity: var(--grain);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .display { font-family: var(--font-display); font-optical-sizing: auto; letter-spacing: -0.035em; line-height: 0.92; }
+  .kicker { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: var(--color-dust); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+    min-height: 3rem; padding: 0 1.4rem; border-radius: 999px; font-weight: 700; letter-spacing: 0.01em;
+    transition: transform 0.25s var(--ease-out-expo), background-color 0.2s, color 0.2s, box-shadow 0.3s;
+    will-change: transform;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.45; pointer-events: none; }
+  .btn-primary { background: var(--color-ember); color: var(--color-on-ember); box-shadow: 0 10px 30px -10px rgb(210 105 42 / 0.6); }
+  .btn-primary:hover { background: var(--color-ember-2); box-shadow: 0 14px 40px -10px rgb(232 132 63 / 0.85); }
+  .btn-ghost { border: 1px solid var(--color-line-2); color: var(--color-ivory); }
+  .btn-ghost:hover { border-color: var(--color-sand); }
+
+  /* Segmented control (language, theme): every option visible, a thumb slides to the chosen one. */
+  .seg {
+    position: relative; display: inline-flex; align-items: center; gap: 2px; padding: 3px; border-radius: 999px;
+    border: 1px solid var(--color-line); background: color-mix(in oklab, var(--color-ink-2) 75%, transparent);
+    backdrop-filter: blur(10px); box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  }
+  .seg-btn {
+    position: relative; display: inline-grid; place-items: center; height: 2.1rem; border-radius: 999px;
+    color: var(--color-sand); transition: color 0.25s;
+  }
+  .seg-btn:hover { color: var(--color-ivory); }
+  .seg-btn[aria-checked="true"], .seg-btn[aria-checked="true"]:hover { color: var(--color-on-ember); }
+  .seg-thumb { position: absolute; inset: 0; border-radius: 999px; background: var(--color-ember); box-shadow: 0 6px 16px -6px rgb(201 95 34 / 0.7); }
+
+  /* Form controls */
+  .field { display: grid; gap: 0.45rem; }
+  .label { font-size: 0.82rem; font-weight: 600; color: var(--color-sand); }
+  .input {
+    width: 100%; min-height: 3.1rem; padding: 0.75rem 1rem; border-radius: 14px;
+    background: var(--color-ink-2); border: 1px solid var(--color-line); color: var(--color-ivory);
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  }
+  .input::placeholder { color: var(--color-dust); opacity: 0.8; }
+  .input:hover { border-color: var(--color-line-2); }
+  .input:focus { outline: none; border-color: var(--color-ember); background: var(--color-ink-3); box-shadow: 0 0 0 4px rgb(210 105 42 / 0.15); }
+  .input[aria-invalid="true"] { border-color: var(--color-bad); }
+  .hint { font-size: 0.78rem; color: var(--color-dust); }
+  .error { font-size: 0.8rem; color: var(--color-bad); font-weight: 600; }
+  .req { color: var(--color-bad); margin-left: 0.15rem; }
+
+  .card { background: var(--color-ink-2); border: 1px solid var(--color-line); border-radius: 22px; box-shadow: var(--shadow-card, none); }
+  :root:not([data-theme="dark"]) .card { --shadow-card: 0 1px 2px rgb(60 35 15 / 0.04), 0 8px 24px -16px rgb(60 35 15 / 0.18); }
+
+  /* Selectable option (live type, package, day, time) */
+  .choice {
+    position: relative; border: 1px solid var(--color-line); background: var(--color-ink-2); border-radius: 18px;
+    transition: border-color 0.2s, background-color 0.2s, transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+  }
+  .choice:hover { border-color: var(--color-line-2); transform: translateY(-2px); }
+  .choice[aria-pressed="true"], .choice[aria-checked="true"] {
+    border-color: var(--color-ember); background: linear-gradient(180deg, rgb(210 105 42 / 0.14), rgb(210 105 42 / 0.04));
+    box-shadow: 0 0 0 1px var(--color-ember), 0 18px 40px -20px rgb(210 105 42 / 0.6);
+  }
+}
+
+/* Theme switch: the new theme grows as a circle (see hooks/useTheme.ts). */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { z-index: 9999; }
+
+/*
+ * Text GSAP is about to reveal stays hidden until it does — only when JS runs
+ * (<html class="js"> is set before paint). Safety net: shown anyway after 2.5 s.
+ */
+.js [data-reveal] { visibility: hidden; animation: reveal-fallback 0s 2.5s forwards; }
+.js [data-reveal].is-ready { visibility: visible; animation: none; }
+@keyframes reveal-fallback { to { visibility: visible; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { visibility: visible; animation: none; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
