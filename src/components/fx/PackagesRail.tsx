@@ -38,7 +38,20 @@ export function PackagesRail({ header, cards, labels }: { header: React.ReactNod
 
   useGSAP(
     () => {
-      if (prefersReduced() || cards.length < 2) return;
+      // DESKTOP ONLY (≥1024 px, mouse/trackpad): on phones and tablets it stays a normal swipeable row.
+      if (cards.length < 2) return;
+      if (prefersReduced() || !window.matchMedia("(min-width: 1024px)").matches) {
+        // Phones/tablets: a native swipe row; the counter and the line follow the swipe.
+        const vp = viewport.current!;
+        const onScroll = () => {
+          const max = vp.scrollWidth - vp.clientWidth;
+          const p = max > 0 ? vp.scrollLeft / max : 0;
+          if (counter.current) counter.current.textContent = String(Math.round(p * (cards.length - 1)) + 1).padStart(2, "0");
+          if (bar.current) bar.current.style.transform = `scaleX(${p})`;
+        };
+        vp.addEventListener("scroll", onScroll, { passive: true });
+        return () => vp.removeEventListener("scroll", onScroll);
+      }
       const vp = viewport.current!;
       const tr = track.current!;
       vp.classList.add("is-pinned");
@@ -48,7 +61,6 @@ export function PackagesRail({ header, cards, labels }: { header: React.ReactNod
 
       const shape = () => {
         const mid = window.innerWidth / 2;
-        const phone = window.innerWidth < 640; // gentler 3D where one card fills the screen
         let active = 0;
         let best = Infinity;
         els.forEach((el, i) => {
@@ -60,8 +72,9 @@ export function PackagesRail({ header, cards, labels }: { header: React.ReactNod
             active = i;
           }
           gsap.set(el, {
-            rotateY: gsap.utils.clamp(-38, 38, d * (phone ? -30 : -55)),
-            z: -ad * (phone ? 140 : 260),
+            // Per-card perspective, NO translateZ: a card pushed behind the screen plane stops receiving clicks.
+            transformPerspective: 1400,
+            rotateY: gsap.utils.clamp(-34, 34, d * -50),
             scale: 1 - Math.min(ad, 1) * 0.08,
             opacity: 1 - Math.min(ad, 1.2) * 0.45,
           });
@@ -101,7 +114,7 @@ export function PackagesRail({ header, cards, labels }: { header: React.ReactNod
   );
 
   return (
-    <section ref={root} id="packages" className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden border-y border-line bg-ink-2/40 py-12 sm:py-16">
+    <section ref={root} id="packages" className="relative flex flex-col justify-center overflow-hidden lg:min-h-[100svh] border-y border-line bg-ink-2/40 py-12 sm:py-16">
       <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8">
         {header}
         <div className="mt-6 flex items-center gap-4 text-xs font-bold tracking-[0.2em] text-dust sm:mt-8">
@@ -109,21 +122,21 @@ export function PackagesRail({ header, cards, labels }: { header: React.ReactNod
           <span className="relative h-px flex-1 overflow-hidden bg-line">
             <span ref={bar} className="absolute inset-0 origin-left scale-x-0 bg-ember" />
           </span>
-          <span className="hidden uppercase sm:inline">{labels.scroll}</span>
+          <span className="hidden uppercase lg:inline">{labels.scroll}</span>
         </div>
       </div>
 
       <div ref={viewport} className="rail-viewport mt-6 py-4 sm:mt-8">
-        {/* side padding = half the screen minus half a card: the FIRST and the LAST card can both stand in the centre */}
+        {/* desktop side padding = half the screen minus half a card: the FIRST and the LAST card can both stand in the centre */}
         <div
           ref={track}
-          className="flex w-max gap-4 px-[calc(50vw-min(41vw,200px))] [perspective:1600px] [transform-style:preserve-3d] sm:gap-6 sm:px-[calc(50vw-210px)]">
+          className="flex w-max gap-4 px-4 sm:gap-6 sm:px-8 lg:px-[calc(50vw-210px)]">
           {cards.map((c, i) => (
             <Link
               key={c.id}
               data-card
               href={c.href}
-              className="rail-card group relative flex w-[min(82vw,400px)] shrink-0 snap-center flex-col overflow-hidden rounded-[28px] border border-line bg-ink-2 p-6 shadow-[var(--shadow)] [backface-visibility:hidden] [transform-style:preserve-3d] sm:w-[420px] sm:p-7"
+              className="rail-card group relative flex w-[min(82vw,400px)] shrink-0 snap-center flex-col overflow-hidden rounded-[28px] border border-line bg-ink-2 p-6 shadow-[var(--shadow)] sm:w-[420px] sm:p-7"
             >
               {/* giant index behind the content */}
               <span aria-hidden className="display pointer-events-none absolute -right-3 -top-6 text-[9rem] font-extralight leading-none text-transparent [-webkit-text-stroke:1px_var(--line-2)]">
