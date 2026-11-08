@@ -1,16 +1,15 @@
 "use client";
 
 import { CalendarDays, ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, Package, UserRound, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
 
 import { logoutAction } from "@/app/admin/actions";
 import { LangToggle } from "@/components/site/LangToggle";
 import { Logo } from "@/components/site/Logo";
 import { ThemeToggle } from "@/components/site/ThemeToggle";
+import { SideDrawer } from "@/components/ui/SideDrawer";
 import { useI18n } from "@/i18n/client";
 
 /**
@@ -98,7 +97,8 @@ export function AdminNav({ name }: { name: string }) {
         {current && <span className="ml-auto truncate text-sm font-semibold text-sand">{current.label}</span>}
       </header>
 
-      <Drawer open={open} onClose={() => setOpen(false)} label={t.admin.brand} closeLabel={t.ui.close}>
+      <SideDrawer open={open} onClose={() => setOpen(false)} side="left" closeLabel={t.ui.close} className="lg:hidden" panelClassName="w-[min(84vw,320px)] pb-[env(safe-area-inset-bottom)]">
+        <div id="admin-drawer" className="flex min-h-full flex-col">
         <div className="flex items-center justify-between px-5 py-4">
           <Link href="/admin" onClick={() => setOpen(false)} className="flex items-center gap-3 text-ivory">
             <Logo className="h-8 w-auto" />
@@ -109,76 +109,8 @@ export function AdminNav({ name }: { name: string }) {
           </button>
         </div>
         {body(() => setOpen(false))}
-      </Drawer>
-    </>
-  );
-}
-
-/** A panel sliding in from the left over a dimmed page. Escape / backdrop close it; focus stays inside. */
-function Drawer({ open, onClose, label, closeLabel, children }: { open: boolean; onClose: () => void; label: string; closeLabel: string; children: React.ReactNode }) {
-  const panel = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-
-  useEffect(() => {
-    if (!open) return;
-    const back = document.activeElement as HTMLElement | null;
-    const raf = requestAnimationFrame(() => panel.current?.querySelector<HTMLElement>("a[aria-current='page'], a, button")?.focus());
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key !== "Tab" || !panel.current) return;
-      const f = panel.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
-      if (!f.length) return;
-      if (e.shiftKey && document.activeElement === f[0]) {
-        e.preventDefault();
-        f[f.length - 1].focus();
-      } else if (!e.shiftKey && document.activeElement === f[f.length - 1]) {
-        e.preventDefault();
-        f[0].focus();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      cancelAnimationFrame(raf);
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = overflow;
-      back?.focus?.();
-    };
-  }, [open, onClose]);
-
-  if (typeof document === "undefined") return null;
-  return createPortal(
-    <AnimatePresence>
-      {open && (
-        <div className="fixed inset-0 z-[90] lg:hidden">
-          <motion.button
-            type="button"
-            tabIndex={-1}
-            aria-label={closeLabel}
-            onClick={onClose}
-            className="absolute inset-0 h-full w-full cursor-default bg-black/55 backdrop-blur-[2px]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          />
-          <motion.div
-            ref={panel}
-            id="admin-drawer"
-            role="dialog"
-            aria-modal="true"
-            aria-label={label}
-            className="absolute inset-y-0 left-0 flex w-[min(84vw,320px)] flex-col overflow-y-auto border-r border-line bg-ink-2 pb-[env(safe-area-inset-bottom)] shadow-[var(--shadow)]"
-            initial={reduce ? { opacity: 0 } : { x: "-100%" }}
-            animate={reduce ? { opacity: 1 } : { x: 0 }}
-            exit={reduce ? { opacity: 0 } : { x: "-100%" }}
-            transition={{ type: "spring", damping: 34, stiffness: 340 }}
-          >
-            {children}
-          </motion.div>
         </div>
-      )}
-    </AnimatePresence>,
-    document.body,
+      </SideDrawer>
+    </>
   );
 }

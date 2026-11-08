@@ -187,7 +187,8 @@ export const SelectField = forwardRef<
   const errorText = error ? ((t.flow.errors as Record<string, unknown>)[error] as string | undefined) ?? error : undefined;
 
   return (
-    <div className="field">
+    // min-w-0: in a grid/flex row the field shrinks to its column and the text truncates (no overlap).
+    <div className="field min-w-0">
       <label htmlFor={id} className={hideLabel ? "sr-only" : "label"}>
         {label}
         {required && <span className="req" aria-hidden>*</span>}
@@ -207,7 +208,7 @@ export const SelectField = forwardRef<
         aria-describedby={errorText || hint ? `${id}-m` : undefined}
         onClick={() => setOpen((v) => !v)}
         onKeyDown={onKeyDown}
-        className={`input flex items-center justify-between gap-3 text-left disabled:opacity-50 ${open && !isMobile ? "border-ember" : ""}`}
+        className={`input flex min-w-0 items-center justify-between gap-3 text-left disabled:opacity-50 ${open && !isMobile ? "border-ember" : ""}`}
       >
         <span className={`flex min-w-0 items-center gap-2.5 ${chosen ? "text-ivory" : "text-dust"}`}>
           {chosen?.leading && !display && <span className="shrink-0 text-lg leading-none">{chosen.leading}</span>}

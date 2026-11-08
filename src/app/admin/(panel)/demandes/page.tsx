@@ -1,6 +1,7 @@
-import { Download, Search } from "lucide-react";
+import { Download } from "lucide-react";
 import Link from "next/link";
 
+import { RequestFilters } from "@/components/admin/RequestFilters";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { getDict } from "@/i18n/server";
 import { formatDay, lomeTime } from "@/lib/time";
@@ -37,35 +38,18 @@ export default async function Requests({ searchParams }: { searchParams: Promise
       {/* status tabs */}
       <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
         {[undefined, ...BOOKING_STATUSES].map((s) => (
-          <Link key={s ?? "all"} href={`/admin/demandes${qs({ status: s, page: 1 })}`} className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ring-1 transition ${f.status === s ? "bg-ember text-ink ring-ember" : "text-sand ring-line-2 hover:text-ivory"}`}>
+          <Link key={s ?? "all"} href={`/admin/demandes${qs({ status: s, page: 1 })}`} className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ring-1 transition ${f.status === s ? "bg-ember text-on-ember ring-ember" : "text-sand ring-line-2 hover:text-ivory"}`}>
             {s ? t.status[s] : tr.all}
           </Link>
         ))}
       </div>
 
-      <form className="card mt-4 grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_auto]">
-        {f.status && <input type="hidden" name="status" value={f.status} />}
-        <label className="relative">
-          <span className="sr-only">{tr.search}</span>
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-dust" />
-          <input name="q" defaultValue={f.q} placeholder={tr.search} className="input pl-9" />
-        </label>
-        <select name="type" defaultValue={f.type ?? ""} className="input" aria-label={t.flow.review.live}>
-          <option value="">{tr.all}</option>
-          <option value="online">{t.liveType.online}</option>
-          <option value="onsite">{t.liveType.onsite}</option>
-        </select>
-        <select name="pkg" defaultValue={f.pkg ?? ""} className="input" aria-label={t.flow.steps[1]}>
-          <option value="">{tr.allPackages}</option>
-          {packages.map((p) => <option key={p.id} value={p.id}>{p.name[locale]}</option>)}
-        </select>
-        <input type="date" name="from" defaultValue={f.from} className="input" aria-label={tr.from} />
-        <input type="date" name="to" defaultValue={f.to} className="input" aria-label={tr.to} />
-        <div className="flex gap-2">
-          <button className="btn btn-primary h-[3.1rem]">{tr.filter}</button>
-          <Link href="/admin/demandes" className="btn btn-ghost h-[3.1rem]">{tr.reset}</Link>
-        </div>
-      </form>
+      <RequestFilters
+        key={JSON.stringify(f)}
+        initial={{ q: f.q ?? "", type: f.type ?? "", pkg: f.pkg ?? "", from: f.from ?? "", to: f.to ?? "" }}
+        status={f.status}
+        packages={packages.map((p) => ({ id: p.id, name: p.name[locale] }))}
+      />
 
       {items.length === 0 ? (
         <p className="mt-10 text-center text-sand">{tr.empty}</p>
