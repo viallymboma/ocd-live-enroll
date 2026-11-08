@@ -47,41 +47,41 @@ export function Hero({ t }: { t: Dict }) {
 
           <p data-reveal data-hero-fade className="mt-6 max-w-[34rem] text-base leading-relaxed text-sand sm:text-lg">{t.hero.lead}</p>
 
-          {/* THE TWO ENTRY POINTS */}
-          <div className="mt-7 grid gap-3 sm:grid-cols-2 sm:gap-4">
+          {/* THE TWO ENTRY POINTS — side by side on every width: on phones the two choices are compared at a glance */}
+          <div className="mt-7 grid grid-cols-2 gap-2.5 sm:gap-4">
             <Link
               data-magnetic
               href="/reserver?type=online"
-              className="group relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-[22px] bg-ember p-5 text-ink shadow-[0_24px_60px_-24px_rgb(210_105_42/0.9)] transition duration-500 ease-out-expo hover:-translate-y-1 hover:bg-ember-2"
+              className="group relative flex min-h-[10.5rem] flex-col justify-between gap-4 overflow-hidden rounded-[20px] bg-ember p-3.5 sm:min-h-[8.5rem] sm:rounded-[22px] sm:p-5 text-ink shadow-[0_24px_60px_-24px_rgb(210_105_42/0.9)] transition duration-500 ease-out-expo hover:-translate-y-1 hover:bg-ember-2"
             >
-              <span className="flex items-start justify-between">
-                <span className="text-[11px] font-extrabold uppercase tracking-[0.2em] opacity-70">01 · {t.liveType.onlineShort}</span>
-                <span className="grid size-10 place-items-center rounded-full bg-ink text-ember transition duration-500 ease-out-expo group-hover:rotate-45">
+              <span className="flex items-start justify-between gap-2">
+                <span className="pt-1 text-[10px] font-extrabold uppercase tracking-[0.16em] opacity-70 sm:text-[11px] sm:tracking-[0.2em]">01 · {t.liveType.onlineShort}</span>
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-ink text-ember sm:size-10 transition duration-500 ease-out-expo group-hover:rotate-45">
                   <ArrowUpRight className="size-5" />
                 </span>
               </span>
               <span>
-                <span className="display block text-[2rem] font-semibold">{t.liveType.online}</span>
-                <span className="mt-1 block text-sm font-medium opacity-75">{t.liveType.onlineHint}</span>
+                <span className="display block text-[1.45rem] font-semibold leading-[0.95] sm:text-[2rem]">{t.liveType.online}</span>
+                <span className="mt-1.5 block text-xs font-medium leading-snug opacity-75 sm:text-sm">{t.liveType.onlineHint}</span>
               </span>
             </Link>
 
             <Link
               data-magnetic
               href="/reserver?type=onsite"
-              className="group relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-[22px] border border-ivory/25 bg-ink-2/80 p-5 text-ivory backdrop-blur transition duration-500 ease-out-expo hover:-translate-y-1 hover:border-ivory/60"
+              className="group relative flex min-h-[10.5rem] flex-col justify-between gap-4 overflow-hidden rounded-[20px] border border-ivory/25 bg-ink-2/80 p-3.5 sm:min-h-[8.5rem] sm:rounded-[22px] sm:p-5 text-ivory backdrop-blur transition duration-500 ease-out-expo hover:-translate-y-1 hover:border-ivory/60"
             >
-              <span className="flex items-start justify-between">
-                <span className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-gold">02 · {t.liveType.onsiteShort} · 6.13°N</span>
-                <span className="grid size-10 place-items-center rounded-full bg-ivory text-ink transition duration-500 ease-out-expo group-hover:rotate-45">
+              <span className="flex items-start justify-between gap-2">
+                <span className="pt-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-gold sm:text-[11px] sm:tracking-[0.2em]">02 · {t.liveType.onsiteShort}<span className="hidden sm:inline"> · 6.13°N</span></span>
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-ivory text-ink sm:size-10 transition duration-500 ease-out-expo group-hover:rotate-45">
                   <ArrowUpRight className="size-5" />
                 </span>
               </span>
               <span>
-                <span className="display block text-[2rem] font-semibold">
-                  {t.liveType.onsite} <span className="italic text-ember">— {t.liveType.onsiteCity}</span>
+                <span className="display block text-[1.45rem] font-semibold leading-[0.95] sm:text-[2rem]">
+                  {t.liveType.onsite} <span className="block italic text-ember sm:inline">— {t.liveType.onsiteCity}</span>
                 </span>
-                <span className="mt-1 block text-sm font-medium text-sand">{t.liveType.onsiteHint}</span>
+                <span className="mt-1.5 block text-xs font-medium leading-snug text-sand sm:text-sm">{t.liveType.onsiteHint}</span>
               </span>
             </Link>
           </div>
