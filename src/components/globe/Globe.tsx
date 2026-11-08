@@ -53,6 +53,11 @@ export default function Globe({ className = "", onFail }: { className?: string; 
       // No GPU (software rendering) → refuse, and the light 2D map is shown instead: a slow globe is worse than none.
       // `?globe=force` overrides it, for testing in headless browsers.
       const force = new URLSearchParams(window.location.search).has("globe");
+      // Ask the browser quietly first: three.js would log a red console error when it refuses.
+      const probe = document.createElement("canvas");
+      const ok = probe.getContext("webgl2", { failIfMajorPerformanceCaveat: !force }) ?? probe.getContext("webgl", { failIfMajorPerformanceCaveat: !force });
+      (ok as WebGLRenderingContext | null)?.getExtension("WEBGL_lose_context")?.loseContext();
+      if (!ok) throw new Error("no-gpu");
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power", failIfMajorPerformanceCaveat: !force });
     } catch {
       onFail?.();

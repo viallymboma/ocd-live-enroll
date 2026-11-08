@@ -121,6 +121,8 @@
 
 @layer base {
   html {
+    /* in-page links (#how, #packages) land below the floating header */
+    scroll-padding-top: 5.5rem;
     background: var(--color-ink);
     color: var(--color-ivory);
     -webkit-tap-highlight-color: transparent;

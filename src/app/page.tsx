@@ -2,6 +2,7 @@ import { LiveTicker } from "@/components/fx/LiveTicker";
 import { Parallax } from "@/components/fx/Parallax";
 import { ScrollProgress } from "@/components/fx/ScrollProgress";
 import { FinalCta } from "@/components/site/FinalCta";
+import { BackToTop } from "@/components/site/BackToTop";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
@@ -36,6 +37,7 @@ export default async function Home() {
         <FinalCta t={t} />
       </main>
       <Footer t={t} />
+      <BackToTop />
     </>
   );
 }
