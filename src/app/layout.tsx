@@ -33,8 +33,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const { locale } = await getDict();
   const pref = await getThemePref();
   return (
-    // Light is the default. "system" is resolved before paint by THEME_SCRIPT (hence suppressHydrationWarning).
-    <html lang={locale} data-theme={pref === "dark" ? "dark" : "light"} data-theme-pref={pref} className={`${fraunces.variable} ${manrope.variable}`} suppressHydrationWarning>
+    // DARK is the default (light is a choice). "system" is resolved before paint by THEME_SCRIPT (hence suppressHydrationWarning).
+    <html lang={locale} data-theme={pref === "light" ? "light" : "dark"} data-theme-pref={pref} className={`${fraunces.variable} ${manrope.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>

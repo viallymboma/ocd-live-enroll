@@ -3,8 +3,8 @@
 /*
  * OCD LIVE DESIGN SYSTEM — "African digital luxury", in two themes.
  * Token names describe a ROLE, not a colour: `ink` = the page, `ivory` = the
- * main text. Light (default): warm ivory paper, charcoal type. Dark: charcoal
- * stage, ivory type. Burnt orange (from the OCD logo) is the signal in both.
+ * main text. Dark (DEFAULT on landing): charcoal stage, ivory type. Light: warm ivory
+ * paper, charcoal type. Burnt orange (from the OCD logo) is the signal in both.
  */
 :root {
   --ink: #faf6ef;          /* page */

@@ -9,7 +9,7 @@ const dark = () => window.matchMedia("(prefers-color-scheme: dark)");
 
 function readPref(): ThemePref {
   const v = document.documentElement.dataset.themePref;
-  return v === "dark" || v === "system" ? v : "light";
+  return v === "light" || v === "system" ? v : "dark";
 }
 function subscribe(cb: () => void) {
   window.addEventListener(EVENT, cb);
@@ -18,7 +18,7 @@ function subscribe(cb: () => void) {
 
 /** The saved preference (light / dark / system), live. */
 export function useThemePref() {
-  return useSyncExternalStore(subscribe, readPref, () => "light" as ThemePref);
+  return useSyncExternalStore(subscribe, readPref, () => "dark" as ThemePref);
 }
 
 let followingSystem = false;
