@@ -223,7 +223,7 @@ export const en: Dict = {
     brand: "Team area",
     metaTitle: "Team area",
     csv: ["Reference", "Status", "Live type", "Package", "Duration (min)", "Price", "Currency", "Date", "Start", "End", "Business", "Sector", "Product", "Description", "Country", "City", "Social media", "Special requests", "Contact", "WhatsApp", "Email", "Sent at", "Rejection reason"],
-    nav: { overview: "Overview", requests: "Requests", packages: "Packages", schedule: "Schedule", account: "My account", logout: "Sign out", site: "View site" },
+    nav: { overview: "Overview", requests: "Requests", packages: "Packages", schedule: "Schedule", account: "My account", menu: "Menu", logout: "Sign out", site: "View site" },
     login: { title: "Sign in", email: "Email", password: "Password", submit: "Sign in", invalid: "Wrong email or password.", locked: "Too many attempts. Try again in 15 minutes, or reset your password.", forgot: "Forgot password?", show: "Show password", hide: "Hide password" },
     account: {
       title: "My account",

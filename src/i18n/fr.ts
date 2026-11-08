@@ -222,7 +222,7 @@ export const fr = {
     brand: "Espace équipe",
     metaTitle: "Espace équipe",
     csv: ["Référence", "Statut", "Type de live", "Formule", "Durée (min)", "Prix", "Devise", "Date", "Début", "Fin", "Entreprise", "Secteur", "Produit", "Description", "Pays", "Ville", "Réseaux sociaux", "Demandes particulières", "Contact", "WhatsApp", "E-mail", "Envoyée le", "Motif du refus"],
-    nav: { overview: "Vue d'ensemble", requests: "Demandes", packages: "Formules", schedule: "Planning", account: "Mon compte", logout: "Déconnexion", site: "Voir le site" },
+    nav: { overview: "Vue d'ensemble", requests: "Demandes", packages: "Formules", schedule: "Planning", account: "Mon compte", menu: "Menu", logout: "Déconnexion", site: "Voir le site" },
     login: { title: "Connexion", email: "E-mail", password: "Mot de passe", submit: "Se connecter", invalid: "E-mail ou mot de passe incorrect.", locked: "Trop d'essais. Réessayez dans 15 minutes, ou réinitialisez votre mot de passe.", forgot: "Mot de passe oublié ?", show: "Afficher le mot de passe", hide: "Masquer le mot de passe" },
     account: {
       title: "Mon compte",
