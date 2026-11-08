@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, ExternalLink, Inbox, LayoutDashboard, LogOut, Package } from "lucide-react";
+import { CalendarDays, ExternalLink, Inbox, LayoutDashboard, LogOut, Package, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,6 +19,7 @@ export function AdminNav({ name }: { name: string }) {
     { href: "/admin/demandes", label: t.admin.nav.requests, Icon: Inbox },
     { href: "/admin/formules", label: t.admin.nav.packages, Icon: Package },
     { href: "/admin/planning", label: t.admin.nav.schedule, Icon: CalendarDays },
+    { href: "/admin/compte", label: t.admin.nav.account, Icon: UserRound },
   ];
   return (
     <aside className="sticky top-0 z-20 border-b border-line bg-ink-2/95 backdrop-blur lg:h-dvh lg:border-b-0 lg:border-r">

@@ -9,7 +9,7 @@ import { FieldLabel } from "@/components/flow/fields";
 import { useI18n } from "@/i18n/client";
 
 /** Password input with a show/hide eye (typing a long password on a phone without seeing it is error-prone). */
-function PasswordInput({ name, autoComplete, minLength, invalid }: { name: string; autoComplete: string; minLength?: number; invalid?: boolean }) {
+export function PasswordInput({ name, autoComplete, minLength, invalid }: { name: string; autoComplete: string; minLength?: number; invalid?: boolean }) {
   const { t } = useI18n();
   const [shown, setShown] = useState(false);
   return (
