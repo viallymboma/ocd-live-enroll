@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { getLocale } from "@/i18n/server";
 import { LIVE_TYPES, type LiveType, type ScheduleRules } from "@/lib/types";
-import { adminCount, createFirstAdmin, login, logout, requestPasswordReset, requireAdmin, resetPassword, setupTokenMatches } from "@/server/auth";
+import { adminCount, changePassword, createFirstAdmin, updateAccount, login, logout, requestPasswordReset, requireAdmin, resetPassword, setupTokenMatches } from "@/server/auth";
 import { addNote, BookingError, changeStatus, moveBooking, SlotTakenError } from "@/server/bookings";
 import { collections } from "@/server/db";
 import { mailClient } from "@/server/mail";
@@ -63,6 +63,29 @@ export async function resetAction(_: FormState, form: FormData): Promise<FormSta
   if (password !== confirm) return { error: "mismatch" };
   if ((await resetPassword(token, password)) !== "ok") return { error: "expired" };
   redirect("/admin");
+}
+
+// ------------------------------------------------------------------ own account
+
+export async function accountAction(_: FormState, form: FormData): Promise<FormState> {
+  const admin = await requireAdmin();
+  const name = String(form.get("name") ?? "").trim().slice(0, 80);
+  const email = String(form.get("email") ?? "").trim();
+  if (!name) return { error: "name" };
+  if (!z.email().safeParse(email).success) return { error: "email" };
+  if ((await updateAccount(admin.id, { name, email })) === "taken") return { error: "taken" };
+  revalidatePath("/admin", "layout");
+  return { ok: "saved" };
+}
+
+export async function passwordAction(_: FormState, form: FormData): Promise<FormState> {
+  const admin = await requireAdmin();
+  const current = String(form.get("current") ?? "");
+  const next = String(form.get("password") ?? "");
+  if (next.length < 10) return { error: "weak" };
+  if (next !== String(form.get("confirm") ?? "")) return { error: "mismatch" };
+  if ((await changePassword(admin.id, current, next)) === "wrong") return { error: "wrong" };
+  return { ok: "changed" };
 }
 
 // ------------------------------------------------------------------ requests

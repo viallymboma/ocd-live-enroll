@@ -191,3 +191,29 @@ export async function resetPassword(token: string, password: string): Promise<"o
   await setSession(admin);
   return "ok";
 }
+
+// ------------------------------------------------------------------ own account
+
+/** Name and email of the signed-in admin. The email must stay unique (it is the login). */
+export async function updateAccount(id: string, input: { name: string; email: string }): Promise<"ok" | "taken"> {
+  const { admins } = await collections();
+  const email = input.email.trim().toLowerCase();
+  const other = await admins.findOne({ email, _id: { $ne: new ObjectId(id) } });
+  if (other) return "taken";
+  await admins.updateOne({ _id: new ObjectId(id) }, { $set: { name: input.name.trim(), email } });
+  return "ok";
+}
+
+/** New password, checked against the current one. Other devices are signed out; this one stays in. */
+export async function changePassword(id: string, current: string, next: string): Promise<"ok" | "wrong"> {
+  const { admins } = await collections();
+  const admin = await admins.findOne({ _id: new ObjectId(id) });
+  if (!admin || !(await verifyPassword(current, admin.passwordHash))) return "wrong";
+  const updated = await admins.findOneAndUpdate(
+    { _id: admin._id },
+    { $set: { passwordHash: await hashPassword(next), failedLogins: 0, lockedUntil: null }, $inc: { sessionVersion: 1 } },
+    { returnDocument: "after" },
+  );
+  if (updated) await setSession(updated);
+  return "ok";
+}
