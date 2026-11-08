@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t.nav.start };
 }
 
-export default async function ReserverPage({ searchParams }: { searchParams: Promise<{ type?: string; package?: string }> }) {
+export default async function ReserverPage({ searchParams }: { searchParams: Promise<{ type?: string; package?: string; step?: string }> }) {
   const sp = await searchParams;
   const [packages, rules] = await Promise.all([listPackages({ activeOnly: true }), getRules()]);
   const type: LiveType | null = sp.type === "online" || sp.type === "onsite" ? sp.type : null;
@@ -23,6 +23,7 @@ export default async function ReserverPage({ searchParams }: { searchParams: Pro
       currency={rules.currency}
       uploadsEnabled={storageEnabled()}
       initialType={type}
+      initialStep={sp.step ?? null}
       initialPackage={sp.package && /^[a-f0-9]{24}$/.test(sp.package) ? sp.package : null}
     />
   );

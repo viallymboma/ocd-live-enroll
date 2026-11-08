@@ -22,18 +22,27 @@ npm run dev
 
 ## Environment variables (Vercel → Settings → Environment Variables)
 
-| Name | Required | Notes |
+Set them for **Production** (and Preview if you use preview links), then redeploy.
+
+| Name | Required | Value |
 |---|---|---|
-| `MONGODB_URI` | ✅ | Same Atlas cluster as FOSOBA |
+| `MONGODB_URI` | ✅ | Same Atlas URI as FOSOBA (`mongodb+srv://…`) |
 | `MONGODB_DB` | ✅ | `ocd_live` — never FOSOBA's database |
-| `AUTH_SECRET` | ✅ | 32+ random characters (signs the admin cookie) |
-| `SETUP_TOKEN` | ✅ first time | Code asked by `/setup` to create the CEO account |
-| `CLOUDINARY_URL` | for photos | Without it, the photo fields are hidden |
+| `AUTH_SECRET` | ✅ | 32+ random characters — `openssl rand -base64 48` (signs the admin cookie) |
+| `SETUP_TOKEN` | ✅ first time | 16+ characters; the code `/setup` asks for to create the CEO account |
+| `SMTP_HOST` `SMTP_PORT` `SMTP_USER` `SMTP_PASSWORD` | ✅ for email | Without them no email leaves: no client confirmations and **no password-reset link** |
+| `MAIL_FROM` | ✅ for email | e.g. `OCD Live <no-reply@your-domain>` (must be allowed by the SMTP account) |
+| `SMTP_SECURE` | | `true`/`false`; default: true on port 465 |
+| `CLOUDINARY_URL` | for photos | `cloudinary://key:secret@cloud`; without it the logo/photo fields are hidden |
 | `CLOUDINARY_FOLDER` | | default `ocd-live` |
-| `SMTP_HOST` `SMTP_PORT` `SMTP_USER` `SMTP_PASSWORD` `MAIL_FROM` | for email | Without them nothing is sent; bookings still work |
 | `ADMIN_NOTIFY_EMAIL` | | Gets a "new request" alert (comma-separated) |
 | `ADMIN_LOCALE` | | Language of that alert: `fr` (default) or `en` |
-| `PUBLIC_URL` | | Site address for the logo in emails (default: Vercel production URL) |
+| `PUBLIC_URL` | | Site address for the logo in emails (default: the Vercel production URL) |
+
+## Password reset
+
+Login → "Forgot password?" → a one-time link valid 30 minutes is emailed (needs SMTP).
+Setting a new password signs every other device out and lifts a login lock. No two-factor step.
 
 ## First admin
 

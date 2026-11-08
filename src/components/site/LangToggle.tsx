@@ -1,22 +1,59 @@
 "use client";
 
-import { useTransition } from "react";
+import { motion } from "motion/react";
+import { useId, useState, useTransition } from "react";
 
 import { setLocale } from "@/app/actions";
 import { useI18n } from "@/i18n/client";
+import type { Locale } from "@/lib/types";
 
-export function LangToggle({ className = "" }: { className?: string }) {
-  const { locale, t } = useI18n();
+/** Each language is named in ITS OWN language: the person who needs the switch can't read the current one. */
+export const LANGUAGES: { value: Locale; short: string; name: string }[] = [
+  { value: "fr", short: "FR", name: "Français" },
+  { value: "en", short: "EN", name: "English" },
+];
+
+/** Shared by the header pill and the phone sheet: saves the cookie, re-renders the page in place. */
+export function useSwitchLocale() {
+  const { locale } = useI18n();
   const [pending, start] = useTransition();
+  const [target, setTarget] = useState<Locale>(locale);
+  const choose = (next: Locale) => {
+    if (next === locale || pending) return;
+    setTarget(next);
+    start(() => setLocale(next));
+  };
+  return { locale, pending, target, choose };
+}
+
+/** FR | EN — both visible, a sliding thumb on the current one. */
+export function LangToggle({ className = "" }: { className?: string }) {
+  const { t } = useI18n();
+  const { locale, pending, target, choose } = useSwitchLocale();
+  const uid = useId();
+  const shown = pending ? target : locale;
   return (
-    <button
-      type="button"
-      onClick={() => start(() => setLocale(locale === "fr" ? "en" : "fr"))}
-      aria-label={t.nav.langLabel}
-      disabled={pending}
-      className={`inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-line-2 px-3 text-xs font-bold tracking-widest text-sand transition hover:border-sand hover:text-ivory disabled:opacity-50 ${className}`}
-    >
-      {t.nav.lang}
-    </button>
+    <div role="radiogroup" aria-label={t.prefs.language} aria-busy={pending} className={`seg ${className}`}>
+      {LANGUAGES.map((l) => {
+        const on = shown === l.value;
+        return (
+          <button
+            key={l.value}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            lang={l.value}
+            title={l.name}
+            aria-label={l.name}
+            onClick={() => choose(l.value)}
+            className={`seg-btn px-3 text-[11px] font-extrabold tracking-[0.14em] ${on ? "text-on-ember" : ""} ${pending ? "cursor-wait" : ""}`}
+          >
+            {on && <motion.span layoutId={`lang-${uid}`} className="seg-thumb" transition={{ type: "spring", stiffness: 500, damping: 38 }} />}
+            <span className="relative">{l.short}</span>
+          </button>
+        );
+      })}
+      <span className="sr-only" aria-live="polite">{pending ? LANGUAGES.find((l) => l.value === target)?.name : ""}</span>
+    </div>
   );
 }

@@ -109,6 +109,9 @@ export type AdminDoc = {
  */
 export type DayLockDoc = { _id: string; v: number };
 
+/** A password-reset link. Only the SHA-256 of the token is stored; one use, 30 minutes. */
+export type PasswordResetDoc = { _id: ObjectId; adminId: ObjectId; tokenHash: string; expiresAt: Date; usedAt: Date | null; createdAt: Date };
+
 export async function collections() {
   const db = await database();
   return {
@@ -117,6 +120,7 @@ export async function collections() {
     bookings: db.collection<BookingDoc>("bookings"),
     admins: db.collection<AdminDoc>("admins"),
     dayLocks: db.collection<DayLockDoc>("dayLocks"),
+    passwordResets: db.collection<PasswordResetDoc>("passwordResets"),
   };
 }
 
@@ -128,6 +132,9 @@ async function ensureIndexes(db: Db) {
     db.collection("bookings").createIndex({ start: 1 }),
     db.collection("admins").createIndex({ email: 1 }, { unique: true }),
     db.collection("packages").createIndex({ order: 1 }),
+    db.collection("passwordResets").createIndex({ tokenHash: 1 }, { unique: true }),
+    // Expired links delete themselves a day later.
+    db.collection("passwordResets").createIndex({ expiresAt: 1 }, { expireAfterSeconds: 86_400 }),
   ]);
 }
 

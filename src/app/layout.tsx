@@ -3,6 +3,8 @@ import { Fraunces, Manrope } from "next/font/google";
 
 import { I18nProvider } from "@/i18n/client";
 import { getDict } from "@/i18n/server";
+import { THEME_SCRIPT } from "@/lib/theme";
+import { getThemePref } from "@/lib/theme-server";
 
 import "./globals.css";
 
@@ -18,12 +20,24 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const viewport: Viewport = { themeColor: "#0e0c0b", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf6ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#0e0c0b" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { locale } = await getDict();
+  const pref = await getThemePref();
   return (
-    <html lang={locale} className={`${fraunces.variable} ${manrope.variable}`}>
+    // Light is the default. "system" is resolved before paint by THEME_SCRIPT (hence suppressHydrationWarning).
+    <html lang={locale} data-theme={pref === "dark" ? "dark" : "light"} data-theme-pref={pref} className={`${fraunces.variable} ${manrope.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="grain">
         <I18nProvider locale={locale}>{children}</I18nProvider>
       </body>

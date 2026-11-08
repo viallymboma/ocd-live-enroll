@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { MoveBooking, NoteForm, StatusActions } from "@/components/admin/RequestActions";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { getDict } from "@/i18n/server";
+import { countryName } from "@/lib/geo";
+import { socialLabel } from "@/lib/social";
 import { formatDay, formatDuration, formatMoney, lomeTime } from "@/lib/time";
 import { getRequest } from "@/server/queries";
 import { signedImageUrl, storageEnabled } from "@/server/storage";
@@ -49,17 +51,22 @@ export default async function RequestDetail({ params }: { params: Promise<{ id: 
           </Block>
           <Block title={d.business}>
             <Row k={t.flow.business.sector} v={t.sectors[b.business.sector as keyof typeof t.sectors] ?? b.business.sector} />
-            <Row k={`${t.flow.business.city}, ${t.flow.business.country}`} v={`${b.business.city}, ${b.business.country}`} />
+            <Row k={`${t.flow.business.city}, ${t.flow.business.country}`} v={`${b.business.city}, ${countryName(b.business.country, locale)}`} />
             <Row k={t.flow.business.product} v={b.business.product} wide />
             <Row k={t.flow.business.description} v={b.business.description} wide />
             {b.business.specialRequests && <Row k={t.flow.business.special} v={b.business.specialRequests} wide />}
-            {(["tiktok", "instagram", "facebook", "website"] as const).map((k) =>
-              b.business[k] ? (
-                <div key={k}>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-dust">{t.flow.business[k]}</dt>
-                  <dd className="mt-1 break-all"><a href={b.business[k]} target="_blank" rel="noopener noreferrer nofollow" className="text-ember-2 hover:underline">{b.business[k]}</a></dd>
-                </div>
-              ) : null,
+            {(b.business.socials ?? []).length > 0 && (
+              <div className="sm:col-span-2">
+                <dt className="text-xs font-semibold uppercase tracking-wider text-dust">{t.social.title}</dt>
+                <dd className="mt-2 flex flex-wrap gap-2">
+                  {b.business.socials.map((x) => (
+                    <a key={x.url} href={x.url} target="_blank" rel="noopener noreferrer nofollow" className="inline-flex items-center gap-2 rounded-full border border-line-2 px-3 py-1.5 text-sm text-ivory hover:border-ember">
+                      <span className="font-semibold">{(t.social.names as Record<string, string>)[x.network] ?? x.network}</span>
+                      <span className="text-dust">{socialLabel(x.url)}</span>
+                    </a>
+                  ))}
+                </dd>
+              </div>
             )}
           </Block>
           <Block title={d.photos}>

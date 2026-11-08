@@ -48,12 +48,10 @@ export type BusinessInfo = {
   sector: string;
   product: string;
   description: string;
+  /** ISO 3166-1 alpha-2, e.g. "TG". */
   country: string;
   city: string;
-  tiktok?: string;
-  instagram?: string;
-  facebook?: string;
-  website?: string;
+  socials: { network: string; url: string }[];
   specialRequests?: string;
 };
 

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+import { countryName } from "@/lib/geo";
 import { lomeTime } from "@/lib/time";
 import { getDict } from "@/i18n/server";
 import { currentAdmin } from "@/server/auth";
@@ -23,8 +24,8 @@ export async function GET(req: NextRequest) {
   const lines = rows.map((b) =>
     [
       b.reference, t.status[b.status], b.liveType === "online" ? t.liveType.online : t.liveType.onsite, b.package.name[locale], b.package.durationMinutes, b.package.price, b.package.currency, b.day, lomeTime(b.start), lomeTime(b.end),
-      b.business.name, t.sectors[b.business.sector as keyof typeof t.sectors] ?? b.business.sector, b.business.product, b.business.description, b.business.country, b.business.city,
-      b.business.tiktok, b.business.instagram, b.business.facebook, b.business.website, b.business.specialRequests,
+      b.business.name, t.sectors[b.business.sector as keyof typeof t.sectors] ?? b.business.sector, b.business.product, b.business.description, countryName(b.business.country, locale), b.business.city,
+      (b.business.socials ?? []).map((x) => `${x.network}: ${x.url}`).join(" | "), b.business.specialRequests,
       b.contact.fullName, b.contact.whatsapp, b.contact.email, b.createdAt.toISOString(), b.rejectionReason,
     ].map(cell).join(";"),
   );

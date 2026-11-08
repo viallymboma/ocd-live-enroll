@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+import { PackagesFx } from "@/components/fx/PackagesFx";
 import type { Dict } from "@/i18n";
 import { formatDuration, formatMoney } from "@/lib/time";
 import type { Locale, PackageDTO } from "@/lib/types";
@@ -27,7 +28,7 @@ export function Packages({ t, locale, packages, currency }: { t: Dict; locale: L
         {packages.length === 0 ? (
           <p className="mt-16 text-sand">{t.packages.empty}</p>
         ) : (
-          <>
+          <PackagesFx locale={locale}>
             {/* hour scale */}
             <div aria-hidden className="mt-16 hidden grid-cols-12 gap-6 text-[10px] font-bold tracking-widest text-dust md:grid">
               <span className="col-span-4" />
@@ -44,7 +45,7 @@ export function Packages({ t, locale, packages, currency }: { t: Dict; locale: L
                 const href = `/reserver?package=${p.id}${p.liveTypes.length === 1 ? `&type=${p.liveTypes[0]}` : ""}`;
                 const pct = (p.durationMinutes / max) * 100;
                 return (
-                  <li key={p.id} className="group relative">
+                  <li key={p.id} data-pkg-row className="group relative">
                     <Link href={href} className="grid gap-4 py-7 transition-colors duration-300 hover:bg-ink-3/40 md:grid-cols-12 md:items-center md:gap-6 md:px-4">
                       <div className="flex items-baseline gap-4 md:col-span-4">
                         <span className="text-xs font-bold text-dust">{String(i + 1).padStart(2, "0")}</span>
@@ -64,6 +65,7 @@ export function Packages({ t, locale, packages, currency }: { t: Dict; locale: L
                         <div className="relative h-11 overflow-hidden rounded-full border border-line bg-ink">
                           {/* drawn to true scale; short packages carry their label outside the bar */}
                           <div
+                            data-bar
                             className="absolute inset-y-0 left-0 flex items-center justify-end rounded-full bg-gradient-to-r from-ember-deep via-ember to-ember-2 pr-4 transition-[filter] duration-500 group-hover:brightness-110"
                             style={{ width: `${pct}%` }}
                           >
@@ -83,7 +85,7 @@ export function Packages({ t, locale, packages, currency }: { t: Dict; locale: L
                       </div>
 
                       <div className="flex items-center justify-between gap-4 md:col-span-3 md:justify-end">
-                        <span className={p.price > 0 ? "display text-3xl text-ivory" : "text-sm font-semibold text-gold"}>
+                        <span data-count={p.price || undefined} className={p.price > 0 ? "display text-3xl tabular-nums text-ivory" : "text-sm font-semibold text-gold"}>
                           {p.price > 0 ? formatMoney(p.price, currency, locale) : t.packages.priceTbc}
                         </span>
                         <span className="grid size-12 shrink-0 place-items-center rounded-full border border-line-2 text-ivory transition duration-500 ease-out-expo group-hover:border-ember group-hover:bg-ember group-hover:text-ink">
@@ -96,7 +98,7 @@ export function Packages({ t, locale, packages, currency }: { t: Dict; locale: L
                 );
               })}
             </ul>
-          </>
+          </PackagesFx>
         )}
       </div>
     </section>

@@ -30,9 +30,17 @@ function getTransport(): Transport | null {
   return transport;
 }
 
+/** True when SMTP is set up — the password-reset screen says so when it is not. */
+export function mailEnabled() {
+  return getTransport() !== null;
+}
+
 async function send(to: string, subject: string, text: string, html: string) {
   const t = getTransport();
-  if (!t) return;
+  if (!t) {
+    console.warn("[mail] SMTP not configured — not sent:", subject);
+    return;
+  }
   try {
     await t.sendMail({ from: process.env.MAIL_FROM, to, subject, text, html });
   } catch (e) {
@@ -184,4 +192,34 @@ export async function mailAdminNewRequest(b: BookingDoc, adminUrl: string) {
   const rows = t.admin.rows.map((r, i) => [r, values[i]] as [string, string]);
   const title = t.admin.title(b.business.name);
   await send(to, `${title} (${b.reference})`, `${title}\n${adminUrl}\n\n${rows.map(([a, v]) => `${a}: ${v}`).join("\n")}`, layout(title, [t.admin.toValidate + adminUrl], rows));
+}
+
+const RESET = {
+  fr: {
+    subject: "Réinitialiser votre mot de passe — OCD Live",
+    title: "Nouveau mot de passe",
+    lines: (name: string) => [
+      `Bonjour ${name},`,
+      "Quelqu'un (vous, sans doute) a demandé à changer le mot de passe de l'espace équipe OCD Live.",
+      "Ouvrez ce lien dans les 30 minutes pour en choisir un nouveau :",
+    ],
+    ignore: "Si ce n'est pas vous, ignorez ce message : votre mot de passe reste inchangé.",
+  },
+  en: {
+    subject: "Reset your password — OCD Live",
+    title: "New password",
+    lines: (name: string) => [
+      `Hello ${name},`,
+      "Someone (probably you) asked to change the password of the OCD Live team area.",
+      "Open this link within 30 minutes to choose a new one:",
+    ],
+    ignore: "If this wasn't you, ignore this message: your password stays the same.",
+  },
+};
+
+/** The reset link. Sent and awaited (the screen only says "sent" once SMTP accepted it). */
+export async function mailPasswordReset(to: string, name: string, link: string, locale: "fr" | "en") {
+  const t = RESET[locale];
+  const lines = [...t.lines(name), link, t.ignore];
+  await send(to, t.subject, [t.title, "", ...lines].join("\n"), layout(t.title, lines, []));
 }

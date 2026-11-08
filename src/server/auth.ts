@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createHmac, randomBytes, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 
 import { ObjectId } from "mongodb";
@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 
 import { collections, type AdminDoc } from "./db";
 import { env } from "./env";
+import { mailPasswordReset } from "./mail";
 
 const scrypt = promisify(scryptCb) as (pw: string, salt: Buffer, len: number) => Promise<Buffer>;
 const COOKIE = "ocd_admin";
@@ -138,4 +139,55 @@ export async function createFirstAdmin(input: { email: string; name: string; pas
   await admins.insertOne(doc);
   await setSession(doc);
   return true;
+}
+
+// ------------------------------------------------------------------ password reset
+
+const RESET_MINUTES = 30;
+const RESETS_PER_HOUR = 3;
+const sha256 = (v: string) => createHash("sha256").update(v).digest("hex");
+
+/**
+ * "Forgot password": emails a one-time link. The answer is the SAME whether or not
+ * the email has an account (nobody can test which addresses exist). At most 3 links
+ * per account per hour.
+ */
+export async function requestPasswordReset(email: string, origin: string, locale: "fr" | "en") {
+  const { admins, passwordResets } = await collections();
+  const admin = await admins.findOne({ email: email.trim().toLowerCase() });
+  if (!admin) return;
+  const recent = await passwordResets.countDocuments({ adminId: admin._id, createdAt: { $gt: new Date(Date.now() - 3_600_000) } });
+  if (recent >= RESETS_PER_HOUR) return;
+  const token = randomBytes(32).toString("base64url");
+  const now = new Date();
+  await passwordResets.insertOne({ _id: new ObjectId(), adminId: admin._id, tokenHash: sha256(token), expiresAt: new Date(now.getTime() + RESET_MINUTES * 60_000), usedAt: null, createdAt: now });
+  await mailPasswordReset(admin.email, admin.name, `${origin}/admin/reset?token=${token}`, locale);
+}
+
+/** Is this link still usable? (for the page, before the form is shown) */
+export async function resetTokenValid(token: string) {
+  if (!token) return false;
+  const { passwordResets } = await collections();
+  return Boolean(await passwordResets.findOne({ tokenHash: sha256(token), usedAt: null, expiresAt: { $gt: new Date() } }));
+}
+
+/**
+ * Sets the new password from a valid link, then: the link is spent, every other
+ * device is signed out (sessionVersion + 1), the lock is lifted, and THIS device is signed in.
+ */
+export async function resetPassword(token: string, password: string): Promise<"ok" | "invalid"> {
+  const { admins, passwordResets } = await collections();
+  const now = new Date();
+  const link = await passwordResets.findOneAndUpdate({ tokenHash: sha256(token), usedAt: null, expiresAt: { $gt: now } }, { $set: { usedAt: now } });
+  if (!link) return "invalid";
+  const admin = await admins.findOneAndUpdate(
+    { _id: link.adminId },
+    { $set: { passwordHash: await hashPassword(password), failedLogins: 0, lockedUntil: null }, $inc: { sessionVersion: 1 } },
+    { returnDocument: "after" },
+  );
+  if (!admin) return "invalid";
+  // Any other link still waiting for this account is now useless.
+  await passwordResets.updateMany({ adminId: admin._id, usedAt: null }, { $set: { usedAt: now } });
+  await setSession(admin);
+  return "ok";
 }

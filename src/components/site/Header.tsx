@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import type { Dict } from "@/i18n";
-import { LangToggle } from "./LangToggle";
+import { Preferences } from "./Preferences";
 import { Logo } from "./Logo";
 
 export function Header({ t }: { t: Dict }) {
@@ -14,7 +14,7 @@ export function Header({ t }: { t: Dict }) {
         <nav className="flex items-center gap-2 sm:gap-6">
           <a href="#how" className="hidden text-sm font-semibold text-sand transition hover:text-ivory md:inline">{t.nav.how}</a>
           <a href="#packages" className="hidden text-sm font-semibold text-sand transition hover:text-ivory md:inline">{t.nav.packages}</a>
-          <LangToggle />
+          <Preferences />
           <Link href="/reserver" className="btn btn-primary hidden h-10 min-h-10 px-4 text-sm sm:inline-flex">{t.nav.start}</Link>
         </nav>
       </div>

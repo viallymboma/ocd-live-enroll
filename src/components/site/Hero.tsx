@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
+import { HeroFx } from "@/components/fx/HeroFx";
 import { AfricaScene } from "@/components/map/AfricaScene";
 import type { Dict } from "@/i18n";
 
@@ -16,13 +17,13 @@ export function Hero({ t }: { t: Dict }) {
       <div aria-hidden className="absolute -top-40 left-1/2 -z-10 h-[620px] w-[1100px] -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(210_105_42/0.16),transparent)]" />
       <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-transparent to-ink" />
 
-      <div className="mx-auto grid max-w-[1400px] items-center gap-6 px-4 sm:px-8 lg:grid-cols-12 lg:gap-4">
+      <HeroFx className="mx-auto grid max-w-[1400px] items-center gap-6 px-4 sm:px-8 lg:grid-cols-12 lg:gap-4">
         {/* the map: after the CTAs on phones (they come first), its own column on desktop */}
-        <div className="relative order-2 mx-auto w-full max-w-[480px] pb-6 lg:col-span-6 lg:max-w-none lg:pb-0">
+        <div data-hero-map className="relative order-2 mx-auto w-full max-w-[480px] pb-6 lg:col-span-6 lg:max-w-none lg:pb-0">
           <AfricaScene />
         </div>
 
-        <div className="relative z-10 order-1 lg:col-span-6 lg:py-16">
+        <div data-hero-copy className="relative z-10 order-1 lg:col-span-6 lg:py-16">
           <p className="kicker mb-5 flex items-center gap-2.5 animate-rise">
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-70" />
@@ -31,28 +32,25 @@ export function Hero({ t }: { t: Dict }) {
             {t.hero.eyebrow}
           </p>
 
-          <h1 className="display text-[clamp(2.9rem,10.5vw,7.4rem)] font-light">
+          <h1 data-split data-reveal className="display text-[clamp(2.9rem,10.5vw,7.4rem)] font-light">
             {words.map((w, i) => (
-              <span key={i} className="block overflow-hidden pb-[0.06em]">
-                <span className="block animate-rise" style={{ animationDelay: `${0.08 + i * 0.09}s` }}>{w}</span>
-              </span>
+              <span key={i} className="block pb-[0.06em]">{w}</span>
             ))}
-            <span className="block overflow-hidden pb-[0.06em]">
-              <span className="block animate-rise" style={{ animationDelay: "0.26s" }}>
-                <span className="italic text-sand">{t.hero.title3} </span>
-                <span className="relative font-semibold text-ember not-italic">
-                  {t.hero.live}
-                  <span aria-hidden className="absolute -right-[0.32em] top-[0.12em] size-[0.17em] animate-blink rounded-full bg-live" />
-                </span>
+            <span className="block pb-[0.06em]">
+              <span className="italic text-sand">{t.hero.title3} </span>
+              <span className="relative font-semibold text-ember not-italic">
+                {t.hero.live}
+                <span aria-hidden className="absolute -right-[0.32em] top-[0.12em] size-[0.17em] animate-blink rounded-full bg-live" />
               </span>
             </span>
           </h1>
 
-          <p className="mt-6 max-w-[34rem] text-base leading-relaxed text-sand sm:text-lg">{t.hero.lead}</p>
+          <p data-reveal data-hero-fade className="mt-6 max-w-[34rem] text-base leading-relaxed text-sand sm:text-lg">{t.hero.lead}</p>
 
           {/* THE TWO ENTRY POINTS */}
           <div className="mt-7 grid gap-3 sm:grid-cols-2 sm:gap-4">
             <Link
+              data-magnetic
               href="/reserver?type=online"
               className="group relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-[22px] bg-ember p-5 text-ink shadow-[0_24px_60px_-24px_rgb(210_105_42/0.9)] transition duration-500 ease-out-expo hover:-translate-y-1 hover:bg-ember-2"
             >
@@ -69,6 +67,7 @@ export function Hero({ t }: { t: Dict }) {
             </Link>
 
             <Link
+              data-magnetic
               href="/reserver?type=onsite"
               className="group relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-[22px] border border-ivory/25 bg-ink-2/80 p-5 text-ivory backdrop-blur transition duration-500 ease-out-expo hover:-translate-y-1 hover:border-ivory/60"
             >
@@ -87,7 +86,7 @@ export function Hero({ t }: { t: Dict }) {
             </Link>
           </div>
         </div>
-      </div>
+      </HeroFx>
     </section>
   );
 }

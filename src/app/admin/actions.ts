@@ -2,11 +2,13 @@
 
 import { ObjectId } from "mongodb";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { getLocale } from "@/i18n/server";
 import { LIVE_TYPES, type LiveType, type ScheduleRules } from "@/lib/types";
-import { adminCount, createFirstAdmin, login, logout, requireAdmin, setupTokenMatches } from "@/server/auth";
+import { adminCount, createFirstAdmin, login, logout, requestPasswordReset, requireAdmin, resetPassword, setupTokenMatches } from "@/server/auth";
 import { addNote, BookingError, changeStatus, moveBooking, SlotTakenError } from "@/server/bookings";
 import { collections } from "@/server/db";
 import { mailClient } from "@/server/mail";
@@ -36,6 +38,30 @@ export async function setupAction(_: FormState, form: FormData): Promise<FormSta
   if (!z.email().safeParse(email).success || !name) return { error: "badToken" };
   if (password.length < 10) return { error: "weak" };
   if (!(await createFirstAdmin({ email, name, password }))) return { error: "done" };
+  redirect("/admin");
+}
+
+export async function forgotAction(_: FormState, form: FormData): Promise<FormState> {
+  const email = String(form.get("email") ?? "").trim();
+  if (!z.email().safeParse(email).success) return { error: "email" };
+  const h = await headers();
+  const origin = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("x-forwarded-host") ?? h.get("host")}`;
+  try {
+    await requestPasswordReset(email, origin, await getLocale());
+  } catch (e) {
+    console.error("[forgot]", e);
+    return { error: "server" };
+  }
+  return { ok: "sent" };
+}
+
+export async function resetAction(_: FormState, form: FormData): Promise<FormState> {
+  const token = String(form.get("token") ?? "");
+  const password = String(form.get("password") ?? "");
+  const confirm = String(form.get("confirm") ?? "");
+  if (password.length < 10) return { error: "weak" };
+  if (password !== confirm) return { error: "mismatch" };
+  if ((await resetPassword(token, password)) !== "ok") return { error: "expired" };
   redirect("/admin");
 }
 

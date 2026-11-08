@@ -1,3 +1,5 @@
+import { LiveTicker } from "@/components/fx/LiveTicker";
+import { ScrollProgress } from "@/components/fx/ScrollProgress";
 import { FinalCta } from "@/components/site/FinalCta";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
@@ -22,9 +24,11 @@ export default async function Home() {
   }
   return (
     <>
+      <ScrollProgress />
       <Header t={t} />
       <main>
         <Hero t={t} />
+        <LiveTicker />
         <HowItWorks />
         <Packages t={t} locale={locale} packages={packages} currency={currency} />
         <FinalCta t={t} />

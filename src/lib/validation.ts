@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { NETWORKS, toSocialUrl } from "./social";
 import { SECTORS } from "./types";
 
 /** Shared by the browser (instant feedback) and the server (the real check). */
@@ -11,30 +12,24 @@ export function normalizeUrl(v: string) {
   if (!s) return "";
   return /^https?:\/\//i.test(s) ? s : `https://${s}`;
 }
-const optionalUrl = z
-  .string()
-  .trim()
-  .max(300, "tooLong")
-  .optional()
-  .transform((v) => (v ? normalizeUrl(v) : undefined))
-  .refine((v) => !v || /^https?:\/\/[^\s/$.?#][^\s]*\.[^\s]{2,}/i.test(v), "url");
-
 export function normalizePhone(v: string) {
   const digits = v.replace(/[^\d+]/g, "");
   return digits.startsWith("00") ? `+${digits.slice(2)}` : digits;
 }
+
+export const socialSchema = z
+  .object({ network: z.enum(NETWORKS, { message: "network" }), url: z.string().trim().min(1, "required").max(300, "tooLong") })
+  .transform((v) => ({ network: v.network, url: toSocialUrl(v.network, v.url) }))
+  .refine((v) => /^https?:\/\/[^\s/$.?#][^\s]*\.[^\s]{2,}/i.test(v.url), { message: "url", path: ["url"] });
 
 export const businessSchema = z.object({
   name: text(120),
   sector: z.enum(SECTORS, { message: "required" }),
   product: text(160),
   description: text(1500),
-  country: text(80),
+  country: z.string().trim().regex(/^[A-Z]{2}$/, "country"),
   city: text(80),
-  tiktok: optionalUrl,
-  instagram: optionalUrl,
-  facebook: optionalUrl,
-  website: optionalUrl,
+  socials: z.array(socialSchema).max(8, "max").default([]),
   specialRequests: optionalText(1000),
 });
 
@@ -44,7 +39,7 @@ export const contactSchema = z.object({
     .string()
     .trim()
     .transform(normalizePhone)
-    .refine((v) => /^\+?\d{8,15}$/.test(v), "phone"),
+    .refine((v) => /^\+\d{8,15}$/.test(v), "phone"),
   email: z.string().trim().toLowerCase().pipe(z.email("email")).pipe(z.string().max(160, "tooLong")),
 });
 

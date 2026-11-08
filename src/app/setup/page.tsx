@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { SetupForm } from "@/components/admin/AuthForms";
 import { Logo } from "@/components/site/Logo";
+import { Preferences } from "@/components/site/Preferences";
 import { getDict } from "@/i18n/server";
 import { adminCount } from "@/server/auth";
 
@@ -16,7 +17,8 @@ export default async function SetupPage() {
   if ((await adminCount()) > 0) redirect("/admin/login");
   const { t } = await getDict();
   return (
-    <main className="grid min-h-dvh place-items-center px-4 py-10">
+    <main className="relative grid min-h-dvh place-items-center px-4 py-10">
+      <Preferences className="absolute right-4 top-4" />
       <div className="w-full max-w-sm">
         <Logo className="mx-auto h-12 w-auto text-ivory" />
         <h1 className="display mt-8 text-center text-4xl">{t.admin.setup.title}</h1>

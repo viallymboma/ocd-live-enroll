@@ -31,10 +31,10 @@ function arc(x1: number, y1: number, x2: number, y2: number) {
 const LENS = { x: 78, y: 420, r: 62, zoom: 3.3, cx: 178, cy: 268 };
 
 const AVATARS = [
-  { role: "brand", Icon: Store, left: "4%", top: "20%", depth: 1.6, delay: 0.9, tone: "from-[#3a2a20] to-[#1c1512]" },
-  { role: "influencer", Icon: Mic, left: "70%", top: "5%", depth: 2.2, delay: 1.1, tone: "from-[#5a2c17] to-[#251510]", live: true },
-  { role: "product", Icon: ShoppingBag, left: "50%", top: "52%", depth: 1.3, delay: 1.3, tone: "from-[#3b3226] to-[#1a1612]" },
-  { role: "audience", Icon: Users, left: "72%", top: "68%", depth: 1.9, delay: 1.5, tone: "from-[#2d2a26] to-[#141210]" },
+  { role: "brand", Icon: Store, left: "4%", top: "20%", depth: 1.6, delay: 0.9, tone: "from-ink-3 to-ink-2" },
+  { role: "influencer", Icon: Mic, left: "70%", top: "5%", depth: 2.2, delay: 1.1, tone: "from-ink-3 to-ink-2", live: true },
+  { role: "product", Icon: ShoppingBag, left: "50%", top: "52%", depth: 1.3, delay: 1.3, tone: "from-ink-3 to-ink-2" },
+  { role: "audience", Icon: Users, left: "72%", top: "68%", depth: 1.9, delay: 1.5, tone: "from-ink-3 to-ink-2" },
 ] as const;
 
 function useParallax(strength: number, x: MotionValue<number>, y: MotionValue<number>) {
@@ -83,11 +83,11 @@ export function AfricaScene({ className = "" }: { className?: string }) {
         <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} className="h-auto w-full overflow-visible" aria-hidden>
           <defs>
             <linearGradient id="land" x1="0" y1="0" x2="0.4" y2="1">
-              <stop offset="0" stopColor="#2a221d" />
-              <stop offset="1" stopColor="#141110" />
+              <stop offset="0" stopColor="var(--map-land-1)" />
+              <stop offset="1" stopColor="var(--map-land-2)" />
             </linearGradient>
             <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse">
-              <circle cx="3.5" cy="3.5" r="0.9" fill="#e0a458" opacity="0.22" />
+              <circle cx="3.5" cy="3.5" r="0.9" fill="var(--map-dots)" opacity="0.22" />
             </pattern>
             <radialGradient id="lomeGlow">
               <stop offset="0" stopColor="#e8843f" stopOpacity="0.9" />
@@ -95,7 +95,7 @@ export function AfricaScene({ className = "" }: { className?: string }) {
             </radialGradient>
             <linearGradient id="route" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0" stopColor="#e8843f" />
-              <stop offset="1" stopColor="#e0a458" stopOpacity="0.4" />
+              <stop offset="1" stopColor="var(--gold)" stopOpacity="0.4" />
             </linearGradient>
             <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="3" />
@@ -107,7 +107,7 @@ export function AfricaScene({ className = "" }: { className?: string }) {
 
           {/* extrusion: the same shape, offset and darker, gives the continent thickness */}
           {[10, 7, 4].map((d, i) => (
-            <path key={d} d={CONTINENT} transform={`translate(${d * 0.6} ${d})`} fill={["#070605", "#0b0908", "#100d0b"][i]} />
+            <path key={d} d={CONTINENT} transform={`translate(${d * 0.6} ${d})`} fill={["var(--map-depth-1)", "var(--map-depth-2)", "var(--map-depth-3)"][i]} />
           ))}
           <motion.g
             initial={reduce ? false : { opacity: 0, y: 16 }}
@@ -116,8 +116,8 @@ export function AfricaScene({ className = "" }: { className?: string }) {
           >
             <path d={CONTINENT} fill="url(#land)" />
             <path d={CONTINENT} fill="url(#dots)" />
-            <path d={BORDERS} fill="none" stroke="#4a3e35" strokeWidth="0.6" strokeLinejoin="round" />
-            <path d={CONTINENT} fill="none" stroke="#e0a458" strokeOpacity="0.35" strokeWidth="1" />
+            <path d={BORDERS} fill="none" stroke="var(--map-border)" strokeWidth="0.6" strokeLinejoin="round" />
+            <path d={CONTINENT} fill="none" stroke="var(--map-coast)" strokeOpacity="0.35" strokeWidth="1" />
           </motion.g>
 
           {/* Togo, lit */}
@@ -143,7 +143,7 @@ export function AfricaScene({ className = "" }: { className?: string }) {
                   cx={c.x}
                   cy={c.y}
                   r="2.6"
-                  fill="#e0a458"
+                  fill="var(--gold)"
                   initial={reduce ? false : { scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 1.8 + i * 0.12, duration: 0.5 }}
@@ -169,22 +169,22 @@ export function AfricaScene({ className = "" }: { className?: string }) {
 
           {/* the lens: Togo enlarged, true shape */}
           <motion.g initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 0.8 }}>
-            <line x1={LOME.x - 4} y1={LOME.y + 4} x2={LENS.x + LENS.r * 0.7} y2={LENS.y - LENS.r * 0.7} stroke="#e0a458" strokeOpacity="0.5" strokeDasharray="2 3" />
-            <circle cx={LENS.x} cy={LENS.y} r={LENS.r + 1} fill="#0e0c0b" stroke="#e0a458" strokeOpacity="0.55" />
+            <line x1={LOME.x - 4} y1={LOME.y + 4} x2={LENS.x + LENS.r * 0.7} y2={LENS.y - LENS.r * 0.7} stroke="var(--gold)" strokeOpacity="0.6" strokeDasharray="2 3" />
+            <circle cx={LENS.x} cy={LENS.y} r={LENS.r + 1} fill="var(--ink)" stroke="var(--gold)" strokeOpacity="0.6" />
             <g clipPath="url(#lensClip)">
               <g transform={`translate(${lensTx} ${lensTy}) scale(${LENS.zoom})`}>
-                <path d={CONTINENT} fill="#1d1815" />
-                <path d={BORDERS} fill="none" stroke="#4a3e35" strokeWidth={0.6 / LENS.zoom} />
+                <path d={CONTINENT} fill="var(--map-land-1)" />
+                <path d={BORDERS} fill="none" stroke="var(--map-border)" strokeWidth={0.6 / LENS.zoom} />
                 <path d={TOGO} fill="#d2692a" stroke="#ffd3a8" strokeWidth={0.5 / LENS.zoom} />
               </g>
               <circle cx={lensLome.x} cy={lensLome.y} r="3.2" fill="#fff3e2" />
               <circle cx={lensLome.x} cy={lensLome.y} r="7" fill="none" stroke="#fff3e2" strokeOpacity="0.5" />
               <text x={lensLome.x + 8} y={lensLome.y - 6} fill="#fff3e2" fontSize="9" fontWeight="700">Lomé</text>
             </g>
-            <text x={LENS.x} y={LENS.y + LENS.r + 18} textAnchor="middle" fill="#f3ebdd" fontSize="13" fontWeight="700" letterSpacing="1.5">
+            <text x={LENS.x} y={LENS.y + LENS.r + 18} textAnchor="middle" fill="var(--ivory)" fontSize="13" fontWeight="700" letterSpacing="1.5">
               TOGO · LOMÉ
             </text>
-            <text x={LENS.x} y={LENS.y + LENS.r + 33} textAnchor="middle" fill="#8f8476" fontSize="10" letterSpacing="1">
+            <text x={LENS.x} y={LENS.y + LENS.r + 33} textAnchor="middle" fill="var(--dust)" fontSize="10" letterSpacing="1">
               6.13°N · 1.21°E
             </text>
           </motion.g>
@@ -236,7 +236,7 @@ function Avatar({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ delay, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="flex animate-float items-center gap-2 rounded-full border border-line-2/80 bg-ink/70 py-1 pl-1 pr-3 shadow-[0_12px_30px_-12px_rgb(0_0_0/0.8)] backdrop-blur-md" style={{ animationDelay: `${delay}s` }}>
+      <div className="flex animate-float items-center gap-2 rounded-full border border-line-2/80 bg-ink-2/80 py-1 pl-1 pr-3 shadow-[var(--shadow)] backdrop-blur-md" style={{ animationDelay: `${delay}s` }}>
         <span className={`relative grid size-8 place-items-center rounded-full bg-gradient-to-br ring-1 ring-gold/40 sm:size-9 ${tone}`}>
           <Icon className="size-4 text-gold" strokeWidth={1.8} />
           <span className={`absolute -right-0.5 -bottom-0.5 size-2.5 rounded-full ring-2 ring-ink ${live ? "bg-live" : "bg-ok"}`} />
